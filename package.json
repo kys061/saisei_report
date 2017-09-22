@@ -1,0 +1,24 @@
+{
+  "name": "saisei_report",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "yskang",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.6.6",
+    "angular-chart.js": "^1.1.1",
+    "angular-loading-bar": "^0.9.0",
+    "angular-momentjs": "^0.2.2",
+    "angular-promise-buttons": "^0.1.20",
+    "angular-save-html-to-pdf": "^1.3.2",
+    "angular-ui-bootstrap": "^2.5.0",
+    "bootstrap": "^3.3.7",
+    "html2canvas": "^0.5.0-beta4",
+    "moment": "^2.18.1",
+    "pdfmake": "^0.1.32"
+  }
+}
