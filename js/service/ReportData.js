@@ -1,6 +1,14 @@
 
-reportApp.factory('ReportData', function ($http, $log, $base64, $moment) {
+reportApp.factory('ReportData', function ($http, $log, $base64, $moment, SharedData) {
+    var from;
+    var until;
    return {
+       setFrom: function(val){
+           from = val;
+       },
+       setUntil: function(val){
+            until = val;
+       },
        getUserdata: function(successcb) {
            rest_ip = 'http://10.161.147.55:';
            rest_port = '5000';
@@ -44,6 +52,7 @@ reportApp.factory('ReportData', function ($http, $log, $base64, $moment) {
        },
 
        getIntRcvData: function(successcb) {
+           $log.info("ReportData's getintrcvdata : "+from+" : "+until)
            rest_ip = 'http://10.161.147.55:';
            rest_port = '5000';
            rest_path = '/rest/nhntestserver/configurations/running/';

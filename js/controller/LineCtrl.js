@@ -1,6 +1,11 @@
 'use strict';
 
-reportApp.controller('LineCtrl', function ReportController($scope, $log, ReportData) {
+reportApp.controller('LineCtrl', function ReportController($scope, $log, ReportData, SharedData, $location, $route, $window) {
+    var from = SharedData.getFrom();
+    var until = SharedData.getUntil();
+    $log.info("LineCtrl: "+from+" : "+until);
+    ReportData.setFrom(from);
+    ReportData.setUntil(until);
 
     $("#export").click(function() {
         var $btn = $(this);
@@ -10,6 +15,24 @@ reportApp.controller('LineCtrl', function ReportController($scope, $log, ReportD
             $btn.button('reset');
         }, 10000);
     });
+    $scope.back = function () {
+        $log.info("back!!");
+        $window.location.reload();
+        // $route.reload();
+        // $location.path('/saisei_report/');
+    };
+    // $scope.from;
+    // $scope.until;
+    // $scope.$watch('date_from', function(val) {
+    //     $scope.from = new Date(val);
+    // });
+    // $scope.$watch('date_until', function(val) {
+    //     $scope.until = new Date(val);
+    // });
+    //
+    // $scope.sendDate = function() {
+    //   $log.info($scope.from+" : "+ $scope.until);
+    // };
 
     $scope.export = function() {
         html2canvas(document.getElementById('first_page'), {
@@ -27,14 +50,14 @@ reportApp.controller('LineCtrl', function ReportController($scope, $log, ReportD
                    content: [
                        {
                            image: $scope.first_page,
-                           width: 540,
-                           height: 640,
+                           width: 600,
+                           height: 650,
                            pageBreak: 'after'
                        },
                        {
                            image: $scope.second_page,
-                           width: 540,
-                           height: 640
+                           width: 600,
+                           height: 650
                        }
                    ]
                };

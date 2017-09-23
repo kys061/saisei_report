@@ -7,6 +7,7 @@
         }
     </style>
     <meta charset="UTF-8">
+    <base href="/saisei_report/">
     <!--<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="./css/simple.min.css">
     <link rel='stylesheet' href='./node_modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
@@ -18,7 +19,8 @@
     <script src="./node_modules/angular-route/angular-route.min.js"></script>
     <script src='./node_modules/angular-loading-bar/build/loading-bar.min.js'></script>
     <script src="./node_modules/angular-momentjs/angular-momentjs.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="./lib/jquery.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>-->
     <script src="./node_modules/chart.js/dist/Chart.js"></script>
     <script src="./node_modules/angular-chart.js/angular-chart.js"></script>
     <!--<script src="./css/bootstrap.min.css"></script>-->
@@ -41,7 +43,7 @@
         <nav class="hidden-xs">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="#top" role="button" class="navbar-brand" style="color: darkred;  font-weight: bold;">
+                    <a href="/saisei_report/" role="button" class="navbar-brand" style="color: darkred;  font-weight: bold;">
                         Saisei Report
                     </a>
                 </li>
@@ -53,8 +55,8 @@
     <!--<input ng-model="date" type="text"/>-->
 <!--</datepicker>-->
 <!--ng-controller="LineCtrl"-->
-<div class="container" style="margin-top: 60px; width:960px">
-    <div id="select_page">
+<div class="container" ng-controller="ReportController" style="margin-top: 60px; width:960px">
+    <div id="select_page" ng-show="currentState">
         <div class="row">
             <div class="col-lg-8 col-sm-8">
                 <form class="form-horizontal">
@@ -63,23 +65,23 @@
                         <div class="form-group">
                             <label for="inputFrom" class="col-lg-2 control-label">Strat(시작)</label>
                             <div class="col-lg-7">
-                                <input datetime-picker id="inputFrom" class="form-control" ng-model="date_from" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="false" />
+                                <input datetime-picker id="inputFrom" class="form-control" ng-model="date_from" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="true" />
                                 <!--<input type="text" class="form-control" id="inputEmail" placeholder="Email">-->
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputUntil" class="col-lg-2 control-label">End(종료)</label>
                             <div class="col-lg-7">
-                                <input datetime-picker id="inputUntil" class="form-control" ng-model="date_until" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="false" />
+                                <input datetime-picker id="inputUntil" class="form-control" ng-model="date_until" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="true" />
                                 <!--<input type="password" class="form-control" id="inputPassword" placeholder="Password">-->
                             </div>
                         </div>
                         <legend></legend>
                         <div class="form-group">
                             <div class="col-lg-10 col-lg-offset-2">
-                                <button ng-click="sendDate()" type="reset" class="btn btn-default">sendDate</button>
-                                <button id="export" ng-click="export()" type="submit" class="btn btn-primary" data-loading-text="Loading..." promise-btn>export</button>
-                                <a href="week" class="btn btn-primary">주간보고서</a>
+                                <!--<button ng-click="sendDate()" type="reset" class="btn btn-default">sendDate</button>-->
+                                <!--<button id="export" ng-click="export()" type="submit" class="btn btn-primary" data-loading-text="Loading..." promise-btn>export</button>-->
+                                <a href="week" ng-click="sendDate()" class="btn btn-primary">주간 보고서 만들기</a>
                             </div>
                         </div>
                     </fieldset>
@@ -87,9 +89,11 @@
             </div>
         </div>
     </div>
+    <ng-view></ng-view>
 </div>
 
-<ng-view></ng-view>
+<!--<div ng-view></div>-->
+<!--<ng-view></ng-view>-->
 
 
 <!--<script src="./node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>-->
@@ -109,5 +113,6 @@
 <script src="./js/controller/ReportController.js"></script>
 <script src="./js/controller/LineCtrl.js"></script>
 <script src="./js/service/ReportData.js"></script>
+<script src="./js/service/SharedData.js"></script>
 </body>
 </html>
