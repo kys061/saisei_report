@@ -2,6 +2,12 @@
 reportApp.factory('ReportData', function ($http, $log, $base64, $moment, SharedData) {
     var from;
     var until;
+    // was setting
+    var auth = $base64.encode("admin:admin");
+    var headers = {"Authorization": "Basic " + auth};
+    var rest_ip = 'http://10.161.147.55:';
+    var rest_port = '5000';
+    var rest_path = '/rest/nhntestserver/configurations/running/';
    return {
        setFrom: function(val){
            from = val;
@@ -17,16 +23,15 @@ reportApp.factory('ReportData', function ($http, $log, $base64, $moment, SharedD
            // rest_qstring = '?token=1&order=<total_rate&start=0&limit=50&select=name,total_rate,active_flows';
            rest_section = 'interfaces/p1p1-ext1';
            rest_attr = 'receive_rate';
-           var rest_from = '08:26:18_20170919'; //GMT
-           var rest_until = '08:26:18_20170920'; //GMT
+           // var rest_from = '08:26:18_20170919'; //GMT
+           // var rest_until = '08:26:18_20170920'; //GMT
            rest_operation = 'raw';
            rest_hist_point = 'true';
            rest_token = '%2Frest%2Fnhntestserver%2Fconfigurations%2Frunning%2Finterfaces%2Fp1p1-ext1';
            rest_qstring = '?select='+rest_attr+'&from='+rest_from+'&operation='+rest_operation+'&history_points='+rest_hist_point+'&token='+rest_token+'&until='+rest_until;
 
            rest_url = rest_ip+rest_port+rest_path+rest_section+rest_qstring;
-           var auth = $base64.encode("admin:admin");
-           headers = {"Authorization": "Basic " + auth};
+
            $http({
                method: 'GET',
                url: rest_url,
@@ -53,9 +58,6 @@ reportApp.factory('ReportData', function ($http, $log, $base64, $moment, SharedD
 
        getIntRcvData: function(successcb) {
            $log.info("ReportData's getintrcvdata : "+from+" : "+until)
-           rest_ip = 'http://10.161.147.55:';
-           rest_port = '5000';
-           rest_path = '/rest/nhntestserver/configurations/running/';
            // rest_section = 'users/';
            // rest_qstring = '?token=1&order=<total_rate&start=0&limit=50&select=name,total_rate,active_flows';
            rest_section = 'interfaces/p1p1-ext1';
@@ -74,8 +76,6 @@ reportApp.factory('ReportData', function ($http, $log, $base64, $moment, SharedD
            rest_qstring = '?select='+rest_attr+'&from='+rest_from+'&operation='+rest_operation+'&history_points='+rest_hist_point+'&token='+rest_token+'&until='+rest_until;
 
            rest_url = rest_ip+rest_port+rest_path+rest_section+rest_qstring;
-           var auth = $base64.encode("admin:admin");
-           headers = {"Authorization": "Basic " + auth};
            $http({
                method: 'GET',
                url: rest_url,
@@ -100,9 +100,6 @@ reportApp.factory('ReportData', function ($http, $log, $base64, $moment, SharedD
 
        },
        getIntTrsData: function(successcb) {
-           rest_ip = 'http://10.161.147.55:';
-           rest_port = '5000';
-           rest_path = '/rest/nhntestserver/configurations/running/';
            // rest_section = 'users/';
            // rest_qstring = '?token=1&order=<total_rate&start=0&limit=50&select=name,total_rate,active_flows';
            rest_section = 'interfaces/p1p1-ext1';
@@ -117,8 +114,6 @@ reportApp.factory('ReportData', function ($http, $log, $base64, $moment, SharedD
            rest_qstring = '?select='+rest_attr+'&from='+rest_from+'&operation='+rest_operation+'&history_points='+rest_hist_point+'&token='+rest_token+'&until='+rest_until;
 
            rest_url = rest_ip+rest_port+rest_path+rest_section+rest_qstring;
-           var auth = $base64.encode("admin:admin");
-           headers = {"Authorization": "Basic " + auth};
            $http({
                method: 'GET',
                url: rest_url,
