@@ -5,7 +5,6 @@ var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'a
     $momentProvider
         .asyncLoading(false)
         .scriptUrl('./lib/moment.min.js');
-
     $routeProvider
         // .when('/', {
         //     templateUrl: "index.html",
@@ -13,7 +12,7 @@ var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'a
         // })
         .when('/week', {
             templateUrl : "templates/week.html",
-            controller: "LineCtrl"
+            controller: "InterfaceCtrl"
         });
 
     $locationProvider.html5Mode(true);

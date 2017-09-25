@@ -5,7 +5,7 @@
     <!--<button pdf-save-button="idOne" pdf-name="someone.pdf" class="btn">print report as pdf</button>-->
     <div id="first_page">
         <div class="page-header" style="width: 600px">
-            <h1>사이세이 주간 보고서</h1>
+            <h1>Saisei 주간 보고서</h1>
         </div>
         <!--<div class="page-header" style="width: 600px">-->
             <!--<h2>주간 인터페이스({{ int_name }}) 트래픽</h2>-->
@@ -37,48 +37,18 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>{{cal_avg.today}}</td>
-                        <td>{{today_rcv_avg | number: 2}}</td>
-                        <td>{{today_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>{{cal_avg.sondday}}</td>
-                        <td>{{sondday_rcv_avg | number: 2}}</td>
-                        <td>{{sondday_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>{{cal_avg.tirdday}}</td>
-                        <td>{{tirdday_rcv_avg | number: 2}}</td>
-                        <td>{{tirdday_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>{{cal_avg.frthday}}</td>
-                        <td>{{frthday_rcv_avg | number: 2}}</td>
-                        <td>{{frthday_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>{{cal_avg.fithday}}</td>
-                        <td>{{fithday_rcv_avg | number: 2}}</td>
-                        <td>{{fithday_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>{{cal_avg.sithday}}</td>
-                        <td>{{sithday_rcv_avg | number: 2}}</td>
-                        <td>{{sithday_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td>{{cal_avg.snthday}}</td>
-                        <td>{{snthday_rcv_avg | number: 2}}</td>
-                        <td>{{snthday_trs_avg | number: 2}}</td>
-                    </tr>
+                        <!--<tr ng-repeat="avg in int_avg_set">-->
+                            <!--<td>{{$index + 1}}</td>-->
+                            <!--<td>{{avg.date}}</td>-->
+                            <!--<td>{{avg.rcv_avg | number: 2}}</td>-->
+                            <!--<td>{{avg.trs_avg | number: 2}}</td>-->
+                        <!--</tr>-->
+                        <tr ng-repeat="data in int_data">
+                            <td>{{$index+1}}</td>
+                            <td>{{ data.date }}</td>
+                            <td>{{ data.rcv_avg | number: 2 }}</td>
+                            <td>{{ data.trs_avg | number: 2 }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -114,47 +84,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>{{cal_avg.today}}</td>
-                        <td>{{today_rcv_avg | number: 2}}</td>
-                        <td>{{today_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>{{cal_avg.sondday}}</td>
-                        <td>{{sondday_rcv_avg | number: 2}}</td>
-                        <td>{{sondday_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>{{cal_avg.tirdday}}</td>
-                        <td>{{tirdday_rcv_avg | number: 2}}</td>
-                        <td>{{tirdday_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>{{cal_avg.frthday}}</td>
-                        <td>{{frthday_rcv_avg | number: 2}}</td>
-                        <td>{{frthday_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>{{cal_avg.fithday}}</td>
-                        <td>{{fithday_rcv_avg | number: 2}}</td>
-                        <td>{{fithday_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>{{cal_avg.sithday}}</td>
-                        <td>{{sithday_rcv_avg | number: 2}}</td>
-                        <td>{{sithday_trs_avg | number: 2}}</td>
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td>{{cal_avg.snthday}}</td>
-                        <td>{{snthday_rcv_avg | number: 2}}</td>
-                        <td>{{snthday_trs_avg | number: 2}}</td>
+                    <tr ng-repeat="data in int_data">
+                        <td>{{$index+1}}</td>
+                        <td>{{ data.date }}</td>
+                        <td>{{ data.rcv_avg | number: 2 }}</td>
+                        <td>{{ data.trs_avg | number: 2 }}</td>
                     </tr>
                     </tbody>
                 </table>

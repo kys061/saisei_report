@@ -23,6 +23,7 @@
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>-->
     <script src="./node_modules/chart.js/dist/Chart.js"></script>
     <script src="./node_modules/angular-chart.js/angular-chart.js"></script>
+    <script src="./node_modules/sugar/dist/sugar.min.js"></script>
     <!--<script src="./css/bootstrap.min.css"></script>-->
     <!--<script src="./css/app.css"></script>-->
     <!--<script src="./lib/bootstrap.min.js"></script>-->
@@ -43,7 +44,8 @@
         <nav class="hidden-xs">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="/saisei_report/" role="button" class="navbar-brand" style="color: darkred;  font-weight: bold;">
+                    <!--<a href="/saisei_report/" role="button" class="navbar-brand" style="color: darkred;  font-weight: bold;">-->
+                    <a role="button" class="navbar-brand" style="color: darkred;  font-weight: bold;">
                         Saisei Report
                     </a>
                 </li>
@@ -81,7 +83,7 @@
                             <div class="col-lg-10 col-lg-offset-2">
                                 <!--<button ng-click="sendDate()" type="reset" class="btn btn-default">sendDate</button>-->
                                 <!--<button id="export" ng-click="export()" type="submit" class="btn btn-primary" data-loading-text="Loading..." promise-btn>export</button>-->
-                                <a href="week" ng-click="sendDate()" class="btn btn-primary">주간 보고서 만들기</a>
+                                <a ng-click="sendDate()" class="btn btn-primary">주간 보고서 만들기</a>
                             </div>
                         </div>
                     </fieldset>
@@ -90,6 +92,24 @@
         </div>
     </div>
     <ng-view></ng-view>
+
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <p></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <!--<div ng-view></div>-->
@@ -112,6 +132,7 @@
 <script src="./js/app.js"></script>
 <script src="./js/controller/ReportController.js"></script>
 <script src="./js/controller/LineCtrl.js"></script>
+<script src="./js/controller/InterfaceCtrl.js"></script>
 <script src="./js/service/ReportData.js"></script>
 <script src="./js/service/SharedData.js"></script>
 </body>

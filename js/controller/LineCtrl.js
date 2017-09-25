@@ -138,6 +138,23 @@ reportApp.controller('LineCtrl', function ReportController($scope, $log, ReportD
             snthday : moment().add(-6, 'days').format('YYYY년 MM월 DD일')
         };
 
+        $scope.dateObj = {
+            to_day : moment().format('DD'),
+            sond_day : moment().add(-1, 'days').format('DD'),
+            tird_day : moment().add(-2, 'days').format('DD'),
+            frth_day : moment().add(-3, 'days').format('DD'),
+            fith_day : moment().add(-4, 'days').format('DD'),
+            sith_day : moment().add(-5, 'days').format('DD'),
+            snth_day : moment().add(-6, 'days').format('DD'),
+
+            today : moment().format('YYYY년 MM월 DD일'),
+            sondday : moment().add(-1, 'days').format('YYYY년 MM월 DD일'),
+            tirdday : moment().add(-2, 'days').format('YYYY년 MM월 DD일'),
+            frthday : moment().add(-3, 'days').format('YYYY년 MM월 DD일'),
+            fithday : moment().add(-4, 'days').format('YYYY년 MM월 DD일'),
+            sithday : moment().add(-5, 'days').format('YYYY년 MM월 DD일'),
+            snthday : moment().add(-6, 'days').format('YYYY년 MM월 DD일')
+        };
         $scope.week_avg = {
             today : [],
             secondday : [],
@@ -162,10 +179,12 @@ reportApp.controller('LineCtrl', function ReportController($scope, $log, ReportD
         }
         // console.log($scope.day === moment($scope.raw_label[6000]).format('DD'));
         // $log.info(moment($scope.raw_label[6000]).format('DD'));
+        $scope.add_rcv_length = 0;
         for(var i = 0; i < $scope._history_length_rcv_rate; i++){
             if ($scope.cal_avg.to_day === moment($scope._history_rcv[i][0]).format('DD')) {
                 $scope.cal_avg.today_rcv_tot += $scope._history_rcv[i][1];
                 $scope.cal_avg.today_rcv_len += 1;
+                $scope.add_rcv_length += 1;
             }
             if ($scope.cal_avg.sond_day === moment($scope._history_rcv[i][0]).format('DD')) {
                 $scope.cal_avg.sondday_rcv_tot += $scope._history_rcv[i][1];
@@ -201,7 +220,7 @@ reportApp.controller('LineCtrl', function ReportController($scope, $log, ReportD
         $scope.fithday_rcv_avg = $scope.cal_avg.fithday_rcv_tot / $scope.cal_avg.fithday_rcv_len;
         $scope.sithday_rcv_avg = $scope.cal_avg.sithday_rcv_tot / $scope.cal_avg.sithday_rcv_len;
         $scope.snthday_rcv_avg = $scope.cal_avg.snthday_rcv_tot / $scope.cal_avg.snthday_rcv_len;
-
+        $log.info("length of today : " + $scope.add_rcv_length);
         ReportData.getIntTrsData(function(data){
             $scope._history_length_trs_rate = data['data']['collection'][0]['_history_length_transmit_rate'];
             $scope._history_trs = data['data']['collection'][0]['_history_transmit_rate'];
@@ -220,31 +239,31 @@ reportApp.controller('LineCtrl', function ReportController($scope, $log, ReportD
             }
 
             for(var i = 0; i < $scope._history_length_trs_rate; i++){
-                if ($scope.cal_avg.to_day === moment($scope._history_trs[i][0]).format('DD')) {
+                if ($scope.dateObj.to_day === moment($scope._history_trs[i][0]).format('DD')) {
                     $scope.cal_avg.today_trs_tot += $scope._history_trs[i][1];
                     $scope.cal_avg.today_trs_len += 1;
                 }
-                if ($scope.cal_avg.sond_day === moment($scope._history_trs[i][0]).format('DD')) {
+                if ($scope.dateObj.sond_day === moment($scope._history_trs[i][0]).format('DD')) {
                     $scope.cal_avg.sondday_trs_tot += $scope._history_trs[i][1];
                     $scope.cal_avg.sondday_trs_len += 1;
                 }
-                if ($scope.cal_avg.tird_day === moment($scope._history_trs[i][0]).format('DD')) {
+                if ($scope.dateObj.tird_day === moment($scope._history_trs[i][0]).format('DD')) {
                     $scope.cal_avg.tirdday_trs_tot += $scope._history_trs[i][1];
                     $scope.cal_avg.tirdday_trs_len += 1;
                 }
-                if ($scope.cal_avg.frth_day === moment($scope._history_trs[i][0]).format('DD')) {
+                if ($scope.dateObj.frth_day === moment($scope._history_trs[i][0]).format('DD')) {
                     $scope.cal_avg.frthday_trs_tot += $scope._history_trs[i][1];
                     $scope.cal_avg.frthday_trs_len += 1;
                 }
-                if ($scope.cal_avg.fith_day === moment($scope._history_trs[i][0]).format('DD')) {
+                if ($scope.dateObj.fith_day === moment($scope._history_trs[i][0]).format('DD')) {
                     $scope.cal_avg.fithday_trs_tot += $scope._history_trs[i][1];
                     $scope.cal_avg.fithday_trs_len += 1;
                 }
-                if ($scope.cal_avg.sith_day === moment($scope._history_trs[i][0]).format('DD')) {
+                if ($scope.dateObj.sith_day === moment($scope._history_trs[i][0]).format('DD')) {
                     $scope.cal_avg.sithday_trs_tot += $scope._history_trs[i][1];
                     $scope.cal_avg.sithday_trs_len += 1;
                 }
-                if ($scope.cal_avg.snth_day === moment($scope._history_trs[i][0]).format('DD')) {
+                if ($scope.dateObj.snth_day === moment($scope._history_trs[i][0]).format('DD')) {
                     $scope.cal_avg.snthday_trs_tot += $scope._history_trs[i][1];
                     $scope.cal_avg.snthday_trs_len += 1;
                 }
@@ -258,7 +277,47 @@ reportApp.controller('LineCtrl', function ReportController($scope, $log, ReportD
             $scope.sithday_trs_avg = $scope.cal_avg.sithday_trs_tot / $scope.cal_avg.sithday_trs_len;
             $scope.snthday_trs_avg = $scope.cal_avg.snthday_trs_tot / $scope.cal_avg.snthday_trs_len;
 
+            $scope.int_avg_set = [
+                {
+                    "date" : $scope.dateObj.today,
+                    "rcv_avg" : $scope.today_rcv_avg,
+                    "trs_avg" : $scope.today_trs_avg
+                },
+                {
+                    "date" : $scope.dateObj.sondday,
+                    "rcv_avg" : $scope.sondday_rcv_avg,
+                    "trs_avg" : $scope.sondday_trs_avg
+                },
+                {
+                    "date" : $scope.dateObj.tirdday,
+                    "rcv_avg" : $scope.tirdday_rcv_avg,
+                    "trs_avg" : $scope.tirdday_trs_avg
+                },
+                {
+                    "date" : $scope.dateObj.frthday,
+                    "rcv_avg" : $scope.frthday_rcv_avg,
+                    "trs_avg" : $scope.frthday_trs_avg
+                },
+                {
+                    "date" : $scope.dateObj.fithday,
+                    "rcv_avg" : $scope.fithday_rcv_avg,
+                    "trs_avg" : $scope.fithday_trs_avg
+                },
+                {
+                    "date" : $scope.dateObj.sithday,
+                    "rcv_avg" : $scope.sithday_rcv_avg,
+                    "trs_avg" : $scope.sithday_trs_avg
+                },
+                {
+                    "date" : $scope.dateObj.snthday,
+                    "rcv_avg" : $scope.snthday_rcv_avg,
+                    "trs_avg" : $scope.snthday_trs_avg
+                }
+            ];
+
+
             $log.info("second avg : "+$scope.sondday_trs_avg);
+            // setting for graph
             $scope.data = [
                 $scope.data_rcv_rate,
                 $scope.data_trs_rate
