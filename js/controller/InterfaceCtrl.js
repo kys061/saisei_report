@@ -4,11 +4,19 @@ reportApp.controller('InterfaceCtrl', function ReportController($scope, $log, Re
     var from = SharedData.getFrom();
     var until = SharedData.getUntil();
     $log.info("InterfaceCtrl: "+from+" : "+until);
+    //get div size init
+    var size = {};
+    size.first_page = {};
+    size.second_page = {};
+    // set date
     ReportData.setFrom(from);
     ReportData.setUntil(until);
     var _from = new Date(from);
     var _until = new Date(until);
-    var timediff = Math.abs(moment(_until).utc() - moment(_from).utc());
+    //
+    $scope.from = _from.toLocaleString();
+    $scope.until = _until.toLocaleString();
+
     var duration = $window.Sugar.Date.range(from, until).every('days').length;
 
     console.log("duration : "+duration);
@@ -28,6 +36,22 @@ reportApp.controller('InterfaceCtrl', function ReportController($scope, $log, Re
     };
 
     $scope.export = function() {
+        html2canvas(document.getElementById('page_header'), {
+            onrendered: function (canvas) {
+                // document.body.appendChild(canvas);
+                $scope.page_header = canvas.toDataURL();
+            }
+            // width: 1200
+        });
+
+        html2canvas(document.getElementById('int_grp'), {
+            onrendered: function (canvas) {
+                // document.body.appendChild(canvas);
+                $scope.int_grp = canvas.toDataURL();
+            }
+            // width: 1200
+        });
+
         html2canvas(document.getElementById('first_page'), {
             onrendered: function (canvas) {
                 // document.body.appendChild(canvas);
@@ -39,18 +63,39 @@ reportApp.controller('InterfaceCtrl', function ReportController($scope, $log, Re
         html2canvas(document.getElementById('second_page'), {
            onrendered: function (canvas){
                $scope.second_page = canvas.toDataURL();
+               size.first_page.width = $('#first_page').width();
+               size.first_page.height = $('#first_page').height();
+               size.second_page.width = $('#second_page').width();
+               size.second_page.height = $('#second_page').height();
+
+               console.log(size.first_page.width+" : "+size.first_page.height+" : "+size.second_page.height+" : "+size.second_page.height)
+               // (original height / original width) x new_width = new_height
+               if (duration >= 20) {
+                   var ratio = 2.5;
+               } else if ( 10 < duration && duration < 20) {
+                   var ratio = 2;
+               } else {
+                   var ratio = 1.5;
+               }
+               var first_page_width = Math.ceil(size.first_page.width / ratio);
+               var first_page_height = Math.ceil((size.first_page.height / size.first_page.width) * first_page_width)
+               var second_page_width = Math.ceil(size.second_page.width / ratio);
+               var second_page_height = Math.ceil((size.second_page.height / size.second_page.width) * second_page_width)
                var docDefinition = {
                    content: [
                        {
                            image: $scope.first_page,
-                           width: 600,
-                           height: 650,
+                           width: first_page_width,
+                           height: first_page_height,
+                           // margin: [left, top, right, bottom]
+                           margin: [50, 20, 0, 0],
                            pageBreak: 'after'
                        },
                        {
                            image: $scope.second_page,
-                           width: 600,
-                           height: 650
+                           width: second_page_width,
+                           height: second_page_height,
+                           margin: [50, 5, 0, 0]
                        }
                    ]
                };

@@ -1,0 +1,7 @@
+{
+  "rest_id" : "admin",
+  "rest_passwd" : "admin",
+  "rest_ip" : "http://10.161.147.55:",
+  "rest_port" : "5000",
+  "rest_path" : "/rest/nhntestserver/configurations/running/"
+}

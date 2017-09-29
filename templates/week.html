@@ -4,8 +4,9 @@
     <!--<button pdf-save-button="idOne" pdf-name="someone.pdf" class="btn">print as pdf</button>-->
     <!--<button pdf-save-button="idOne" pdf-name="someone.pdf" class="btn">print report as pdf</button>-->
     <div id="first_page">
-        <div class="page-header" style="width: 600px">
-            <h1>Saisei 주간 보고서</h1>
+        <div id="page_header" class="page-header" style="width: 608px">
+            <h1>Saisei 보고서</h1>
+            <p>보고서 기간 : ({{from}} ~ {{until}})</p>
         </div>
         <!--<div class="page-header" style="width: 600px">-->
             <!--<h2>주간 인터페이스({{ int_name }}) 트래픽</h2>-->
@@ -13,8 +14,8 @@
 
         <div class="row">
             <div class="col-lg-8 col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">주간 인터페이스 트래픽({{ int_name }})</div>
+                <div id="int_grp" class="panel panel-default">
+                    <div class="panel-heading">인터페이스 트래픽({{ int_name }})</div>
                     <div class="panel-body">
 
                         <canvas id="line" class="chart chart-line" chart-data="data"

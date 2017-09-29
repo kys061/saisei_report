@@ -1,6 +1,6 @@
 'use strict';
 
-var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'angular-momentjs', 'angular-loading-bar', 'angularPromiseButtons', 'angularjs-datetime-picker'])
+var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'angular-momentjs',  'angular-loading-bar', 'angularPromiseButtons', 'angularjs-datetime-picker'])
     .config(function($routeProvider, $locationProvider, $momentProvider){
     $momentProvider
         .asyncLoading(false)

@@ -1,8 +1,13 @@
 
-reportApp.factory('ReportData', function ($http, $log, $base64, $moment, SharedData) {
+reportApp.factory('ReportData', function ($http, $log, $base64, $window) {
     var from;
     var until;
     // was setting
+    $.getJSON("./config/report-config.json", function(config) {
+        console.log(config);
+    });
+    // var data = ReportConfig.promiseToHaveData();
+    // console.log("promise data : " + data);
     var auth = $base64.encode("admin:admin");
     var headers = {"Authorization": "Basic " + auth};
     var rest_ip = 'http://10.161.147.55:';
@@ -126,8 +131,13 @@ reportApp.factory('ReportData', function ($http, $log, $base64, $moment, SharedD
                    // receive_rate = data['data']['collection'][0]['_history_receive_rate'][0][0];
                    // $log.info(receive_time, receive_rate)
                },
-               function (data, status, headers, config){
-                   $log.warn(data, status, headers, config);
+               function onError(response){
+                   // $log.warn(data, status, headers, config);
+                   $log.info(response);
+                   $log.warn("ERROR!!!");
+                   if (response.status < 0){
+                       alert("ERROR!!!");
+                   }
                })
 
        },
