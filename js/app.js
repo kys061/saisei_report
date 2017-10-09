@@ -10,9 +10,9 @@ var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'a
         //     templateUrl: "index.html",
         //     controller: "ReportController"
         // })
-        .when('/week', {
-            templateUrl : "templates/week.html",
-            controller: "InterfaceCtrl"
+        .when('/report', {
+            templateUrl : "templates/report.html",
+            controller: "ReportCtrl"
         });
 
     $locationProvider.html5Mode(true);

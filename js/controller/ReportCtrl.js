@@ -36,21 +36,21 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
     };
 
     $scope.export = function() {
-        html2canvas(document.getElementById('page_header'), {
-            onrendered: function (canvas) {
-                // document.body.appendChild(canvas);
-                $scope.page_header = canvas.toDataURL();
-            }
-            // width: 1200
-        });
-
-        html2canvas(document.getElementById('int_grp'), {
-            onrendered: function (canvas) {
-                // document.body.appendChild(canvas);
-                $scope.int_grp = canvas.toDataURL();
-            }
-            // width: 1200
-        });
+        // html2canvas(document.getElementById('page_header'), {
+        //     onrendered: function (canvas) {
+        //         // document.body.appendChild(canvas);
+        //         $scope.page_header = canvas.toDataURL();
+        //     }
+        //     // width: 1200
+        // });
+        //
+        // html2canvas(document.getElementById('int_grp'), {
+        //     onrendered: function (canvas) {
+        //         // document.body.appendChild(canvas);
+        //         $scope.int_grp = canvas.toDataURL();
+        //     }
+        //     // width: 1200
+        // });
 
         html2canvas(document.getElementById('first_page'), {
             onrendered: function (canvas) {
@@ -77,10 +77,11 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
                } else {
                    var ratio = 1.5;
                }
+               console.log("ratio : " + ratio);
                var first_page_width = Math.ceil(size.first_page.width / ratio);
-               var first_page_height = Math.ceil((size.first_page.height / size.first_page.width) * first_page_width)
+               var first_page_height = Math.ceil((size.first_page.height / size.first_page.width) * first_page_width);
                var second_page_width = Math.ceil(size.second_page.width / ratio);
-               var second_page_height = Math.ceil((size.second_page.height / size.second_page.width) * second_page_width)
+               var second_page_height = Math.ceil((size.second_page.height / size.second_page.width) * second_page_width);
                var docDefinition = {
                    content: [
                        {
