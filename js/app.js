@@ -1,7 +1,6 @@
 'use strict';
 
-var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'angular-momentjs',  'angular-loading-bar', 'angularPromiseButtons', 'angularjs-datetime-picker'])
-    .config(function($routeProvider, $locationProvider, $momentProvider){
+var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'angular-momentjs',  'angular-loading-bar', 'angularPromiseButtons', 'angularjs-datetime-picker', 'ngTableToCsv'])    .config(function($routeProvider, $locationProvider, $momentProvider){
     $momentProvider
         .asyncLoading(false)
         .scriptUrl('./lib/moment.min.js');
@@ -16,6 +15,10 @@ var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'a
         });
 
     $locationProvider.html5Mode(true);
-});
+    })
+    .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+        cfpLoadingBarProvider.latencyThreshold = 500;
+        // console.log("loading bar LOGGG!!!");
+    }]);
 
 // 'htmlToPdfSave',

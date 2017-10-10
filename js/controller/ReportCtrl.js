@@ -34,6 +34,40 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
         // $route.reload();
         // $location.path('/saisei_report/');
     };
+    $scope.export_xls = function(){
+            // $(".table2excel").table2excel({
+            //     exclude: ".noExl",
+            //     name: "Excel Document Name",
+            //     filename: "myFileName" + new Date().toISOString().replace(/[\-\:\.]/g, ""),
+            //     fileext: ".xls",
+            //     exclude_img: true,
+            //     exclude_links: true,
+            //     exclude_inputs: true
+            // });
+        var data1 = alasql('SELECT * FROM HTML("#table1",{headers:true})');
+        var data2 = alasql('SELECT * FROM HTML("#table2",{headers:true})');
+        console.log(data2);
+        var data = data1.concat(data2);
+        console.log(data);
+        alasql('SELECT * INTO CSV("interface.csv",{headers:true, separator:","}) FROM ?', [data1]);
+        alasql('SELECT * INTO CSV("user_traffic.csv",{headers:true, separator:","}) FROM ?', [data2]);
+
+        // $("table").tableExport({
+        //        headers: true,
+        //        footers: false,
+        //        formats: ['xlsx'],
+        //        filename: 'id',
+        //        bootstrap: true,
+        //        exportButtons: false,
+        //        position: 'bottom',
+        //        ignoreRows: null,
+        //        ignoreCols: null,
+        //        ignoreCSS: '.tableexport-ignore',
+        //        emptyCSS: '.tableexport-empty',
+        //        trimWhitespace: false
+        //    });
+    };
+
 
     $scope.export = function() {
         // html2canvas(document.getElementById('page_header'), {
@@ -68,40 +102,99 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
                size.second_page.width = $('#second_page').width();
                size.second_page.height = $('#second_page').height();
 
-               console.log(size.first_page.width+" : "+size.first_page.height+" : "+size.second_page.height+" : "+size.second_page.height)
+               // var first_page_width = Math.ceil(size.first_page.width / ratio);
+               // var first_page_height = Math.ceil((size.first_page.height / size.first_page.width) * first_page_width);
+               // var second_page_width = Math.ceil(size.second_page.width / ratio);
+               // var second_page_height = Math.ceil((size.second_page.height / size.second_page.width) * second_page_width);
+
+               console.log(size.first_page.width+" : "+size.first_page.height+" : "+size.second_page.height+" : "+size.second_page.height);
                // (original height / original width) x new_width = new_height
                if (duration >= 20) {
-                   var ratio = 2.5;
+                   var ratio = 2.7;
+                   $scope.docConfig = {
+                       content: [
+                           {
+                               image: $scope.first_page,
+                               width: Math.ceil(size.first_page.width / ratio),
+                               height: Math.ceil((size.first_page.height / size.first_page.width) * Math.ceil(size.first_page.width / ratio)),
+                               // margin: [left, top, right, bottom]
+                               margin: [30, 20, 0, 0],
+                               pageBreak: 'after'
+                           },
+                           {
+                               image: $scope.second_page,
+                               width: Math.ceil(size.second_page.width / ratio),
+                               height: Math.ceil((size.second_page.height / size.second_page.width) * Math.ceil(size.second_page.width / ratio)),
+                               margin: [30, 5, 0, 0]
+                           }
+                       ]
+                   };
+
                } else if ( 10 < duration && duration < 20) {
-                   var ratio = 2;
+                   var ratio = 2.3;
+                   $scope.docConfig = {
+                       content: [
+                           {
+                               image: $scope.first_page,
+                               width: Math.ceil(size.first_page.width / ratio),
+                               height: Math.ceil((size.first_page.height / size.first_page.width) * Math.ceil(size.first_page.width / ratio)),
+                               // margin: [left, top, right, bottom]
+                               margin: [30, 20, 0, 0],
+                               pageBreak: 'after'
+                           },
+                           {
+                               image: $scope.second_page,
+                               width: Math.ceil(size.second_page.width / ratio),
+                               height: Math.ceil((size.second_page.height / size.second_page.width) * Math.ceil(size.second_page.width / ratio)),
+                               margin: [30, 5, 0, 0]
+                           }
+                       ]
+                   };
                } else {
-                   var ratio = 1.5;
+                   var ratio = 2;
+                   // var docConfig = {
+                   //     content: [
+                   //         {
+                   //             image: $scope.first_page,
+                   //             width: Math.ceil($('#first_page').width() / ratio),
+                   //             height: Math.ceil(($('#first_page').height() / $('#first_page').width()) * $('#first_page').width()),
+                   //             // margin: [left, top, right, bottom]
+                   //             margin: [50, 20, 0, 0]
+                   //             // pageBreak: 'after'
+                   //         },
+                   //         {
+                   //             image: $scope.second_page,
+                   //             width: Math.ceil($('#second_page').width() / ratio),
+                   //             height: Math.ceil(($('#second_page').height() / $('#second_page').width()) * $('#second_page').width()),
+                   //             margin: [50, 5, 0, 0]
+                   //         }
+                   //     ]
+                   // };
+                   $scope.docConfig = {
+                       content: [
+                           {
+                               image: $scope.first_page,
+                               width: Math.ceil(size.first_page.width / ratio),
+                               height: Math.ceil((size.first_page.height / size.first_page.width) * Math.ceil(size.first_page.width / ratio)),
+                               // margin: [left, top, right, bottom]
+                               margin: [5, 0, 0, 0],
+                               pageBreak: 'after'
+                           },
+                           {
+                               image: $scope.second_page,
+                               width: Math.ceil(size.second_page.width / ratio),
+                               height: Math.ceil((size.second_page.height / size.second_page.width) * Math.ceil(size.second_page.width / ratio)),
+                               margin: [5, 0, 0, 0]
+                           }
+                       ]
+                   };
+                   console.log($scope.docConfig);
                }
                console.log("ratio : " + ratio);
-               var first_page_width = Math.ceil(size.first_page.width / ratio);
-               var first_page_height = Math.ceil((size.first_page.height / size.first_page.width) * first_page_width);
-               var second_page_width = Math.ceil(size.second_page.width / ratio);
-               var second_page_height = Math.ceil((size.second_page.height / size.second_page.width) * second_page_width);
-               var docDefinition = {
-                   content: [
-                       {
-                           image: $scope.first_page,
-                           width: first_page_width,
-                           height: first_page_height,
-                           // margin: [left, top, right, bottom]
-                           margin: [50, 20, 0, 0],
-                           pageBreak: 'after'
-                       },
-                       {
-                           image: $scope.second_page,
-                           width: second_page_width,
-                           height: second_page_height,
-                           margin: [50, 5, 0, 0]
-                       }
-                   ]
-               };
+               console.log($scope.docConfig);
+               var docDefinition = $scope.docConfig;
                // $log.info("onrendered");
-               pdfMake.createPdf(docDefinition).download("test.pdf",function() { alert('pdf download is done'); });
+               pdfMake.createPdf($scope.docConfig).download("test.pdf",function() { alert('pdf 다운로드가 완료 되었습니다!'); });
            }
         });
     };
@@ -237,8 +330,8 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
             for (var k = 0; k < $scope.int_date.length; k++){
                 $scope.int_data.push({
                     date : $scope.int_date[k],
-                    rcv_avg : $scope.int_rcv_avg[k],
-                    trs_avg : $scope.int_trs_avg[k]
+                    rcv_avg : Math.ceil($scope.int_rcv_avg[k]*0.001),
+                    trs_avg : Math.ceil($scope.int_trs_avg[k]*0.001)
                 });
             }
 
@@ -247,8 +340,49 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
                 $scope.data_rcv_rate,
                 $scope.data_trs_rate
             ];
+
+            ReportData.getUserdata(function(data) {
+                console.log(data);
+                var _users = data['data']['collection'];
+                $scope._users_label = [];
+                $scope._users_from = [];
+                $scope._users_until = [];
+                $scope._users_series = ['총사용량(단위:Mbit/s)', '다운로드 사용량(단위:Mbit/s)', '업로드 사용량(단위:Mbit/s)'];
+                $scope._users_total = [];
+                $scope._users_download = [];
+                $scope._users_upload = [];
+                $scope._users_tb_data = [];
+                for (var i = 0; i < _users.length; i++) {
+                    $scope._users_label.push(_users[i]['name']);
+                    var t_from = new Date(_users[i]['from']);
+                    $scope._users_from.push(t_from.toLocaleString());
+                    var t_until = new Date(_users[i]['until']);
+                    $scope._users_until.push(t_until.toLocaleString());
+                    $scope._users_total.push(Math.ceil(_users[i]['total_rate']*0.001));
+                    $scope._users_download.push(Math.ceil(_users[i]['dest_smoothed_rate']*0.001));
+                    $scope._users_upload.push(Math.ceil(_users[i]['source_smoothed_rate']*0.001));
+
+                    //
+                    $scope._users_tb_data.push({
+                        name : _users[i]['name'],
+                        from : t_from.toLocaleString(),
+                        until : t_until.toLocaleString(),
+                        total : Math.ceil(_users[i]['total_rate']*0.001),
+                        down : Math.ceil(_users[i]['dest_smoothed_rate']*0.001),
+                        up : Math.ceil(_users[i]['source_smoothed_rate']*0.001)
+                    });
+                }
+                $scope._users_data = [$scope._users_total, $scope._users_download, $scope._users_upload];
+                // for (var i = 0; i < _users.length; i++) {
+                //
+                // }
+                console.log($scope._users_tb_data);
+            });
+
         });
 
+
+        // for interface graph
         $scope.labels = $scope.label;
         $scope.series = ['p1p1-ext-rcv(단위:KB/S)', 'p1p1-int-trs(단위:KB/S)'];
         $scope.colors = ['#45b7cd', '#ff6384', '#ff8e72'];
@@ -271,5 +405,12 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
                 ]
             }
         };
+        // for users data graph
+        // $scope.users_label = $scope._users_label;
+        // $scope.users_series = $scope._users_series;
+        // $scope.users_data = $scope._users_data;
+        // $scope._users_label = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+        // $scope._users_series = ['Series A'];
+        // $scope._users_data = [28, 48, 40, 19, 86, 27, 90];
     });
 });
