@@ -36,35 +36,44 @@
     <title>saisei report</title>
 </head>
 <body ng-app="reportApp">
-<div class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand visible-xs" href="#">Angular Charts</a>
+            <a class="navbar-brand" href="#"><b>Saisei Report</b></a>
         </div>
-        <nav class="hidden-xs">
-            <ul class="nav navbar-nav">
-                <li>
-                    <!--<a href="/saisei_report/" role="button" class="navbar-brand" style="color: darkred;  font-weight: bold;">-->
-                    <a role="button" class="navbar-brand" style="color: darkred;  font-weight: bold;">
-                        Saisei Report
-                    </a>
-                </li>
-            </ul>
-        </nav>
+        <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
+
+        <!--</div>-->
+        <!--<form class="navbar-form pull-right" role="search" ng-controller="ReportCtrl">-->
+            <!--<div class="form-group" ng-show="currentBtnState">-->
+                <!--<div class="btn-group btn-group-sm" role="group" aria-label="First group">-->
+                    <!--<button id="export" ng-click="export()" type="submit" class="btn btn-default" data-loading-text="Loading..." promise-btn>PDF 출력</button>-->
+                    <!--<button ng-click="export_xls()" type="submit" class="btn btn-default" data-loading-text="Loading...">CSV 출력</button>-->
+                    <!--<a href="/saisei_report/" ng-click="back()" class="btn btn-default">뒤로가기(BACK)</a>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</form>-->
     </div>
-</div>
-<!--<datepicker>-->
-    <!--<input ng-model="date" type="text"/>-->
-<!--</datepicker>-->
-<!--ng-controller="LineCtrl"-->
+</nav>
+
 <!--<div class="container" ng-controller="MainCtrl" style="margin-top: 60px; width:960px">-->
-<div class="container" ng-controller="MainCtrl" style="margin-top: 60px;">
+<div class="container" ng-controller="MainCtrl" style="margin-top: 60px">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-3">Saisei Report</h1>
+            <hr class="my-4">
+            <p class="lead">기간을 선택하여 리포트를 만들 수 있습니다.
+            </p>
+        </div>
+
+    </div>
+    <!--<legend> </legend>-->
     <div id="select_page" ng-show="currentState">
         <div class="row">
             <div class="col-lg-8 col-sm-8">

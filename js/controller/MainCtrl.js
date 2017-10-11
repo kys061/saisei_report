@@ -35,7 +35,6 @@ reportApp.controller('MainCtrl', function MainCtrl($scope, $log, $route, $templa
                 $log.info("MainCtrl: "+from+" : "+ until);
                 $scope.currentState = false;
                 $scope.currentDurationState = false;
-
                 SharedData.setFrom(from);
                 SharedData.setUntil(until);
                 $location.path('/report')

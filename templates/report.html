@@ -1,14 +1,16 @@
 <!--<div id="exportthis" class="container" pdf-save-content="idOne" style="margin-top: 60px; width:960px">-->
 <div id="exportthis" class="container" pdf-save-content="idOne" style="margin-top: 60px; width: 1020px;">
-    <button id="export" ng-click="export()" type="submit" class="btn btn-primary" data-loading-text="Loading..." promise-btn>pdf 출력</button>
-    <button ng-click="export_xls()" type="submit" class="btn btn-primary" data-loading-text="Loading...">xls 출력</button>
-    <a href="/saisei_report/" ng-click="back()" class="btn btn-primary">back</a>
+    <div class="btn-group pull-right" role="group" aria-label="First group">
+        <button id="export" ng-click="export()" type="submit" class="btn btn-primary" data-loading-text="Loading..." promise-btn>PDF 출력</button>
+        <button ng-click="export_xls()" type="submit" class="btn btn-primary" data-loading-text="Loading...">CSV 출력</button>
+        <a href="/saisei_report/" ng-click="back()" class="btn btn-primary">뒤로가기(BACK)</a>
+    </div>
     <!--<button pdf-save-button="idOne" pdf-name="someone.pdf" class="btn">print as pdf</button>-->
     <!--<button pdf-save-button="idOne" pdf-name="someone.pdf" class="btn">print report as pdf</button>-->
     <div id="first_page">
         <div id="page_header" class="page-header">
-            <h1>Saisei Report</h1>
-            <p>보고서 기간 : ({{from}} ~ {{until}})</p>
+            <h1><b>Saisei Report</b></h1>
+            <p>기간 : ({{from}} ~ {{until}})</p>
         </div>
         <!--<div class="page-header" style="width: 600px">-->
             <!--<h2>주간 인터페이스({{ int_name }}) 트래픽</h2>-->
@@ -17,9 +19,8 @@
         <div class="row">
             <div class="col-lg-12 col-sm-12">
                 <div id="int_grp" class="panel panel-default">
-                    <div class="panel-heading">인터페이스 트래픽({{ int_name }})</div>
+                    <div class="panel-heading"><h4>인터페이스 트래픽({{ int_name }})</h4></div>
                     <div class="panel-body">
-
                         <canvas id="line" class="chart chart-line" chart-data="data"
                                 chart-labels="labels" chart-series="series" chart-options="options"
                                 chart-dataset-override="datasetOverride" chart-colors="colors">
@@ -29,7 +30,7 @@
             </div>
         </div>
         <div class="row">
-            <div id="tbl" class="col-lg-12 col-sm-12">
+            <div class="col-lg-12 col-sm-12">
                 <!--<a class="btn btn-primary" title="Export Table" ng-click='interface.generate()' ng-href="{{ interface.link() }}" download="interface.csv">Export csv</a>-->
                 <table id="table1" class="table table-bordered table-hover">
                     <thead>
@@ -65,7 +66,7 @@
         <div class="row">
             <div class="col-lg-12 col-sm-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">사용자 트래픽</div>
+                    <div class="panel-heading"><h4>사용자 트래픽</h4></div>
                     <div class="panel-body">
 
                         <!--<canvas id="line" class="chart chart-line" chart-data="data"-->
@@ -75,14 +76,15 @@
 
                         <canvas id="users" class="chart-horizontal-bar"
                                 chart-data="_users_data" chart-labels="_users_label"
-                                chart-series="_users_series" chart-colors="colors">
+                                chart-series="_users_series" chart-colors="colors"
+                                chart-options="_users_option">
                         </canvas>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div id="tbl" class="col-lg-12 col-sm-12">
+            <div class="col-lg-12 col-sm-12">
                 <!--<a class="btn btn-primary" title="Export Table" ng-click='user_traffic.generate()' ng-href="{{ user_traffic.link() }}" download="user_traffic.csv">Export csv</a>-->
                 <table id="table2" class="table table-bordered table-hover">
                     <thead>

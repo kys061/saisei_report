@@ -416,6 +416,30 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
                     });
                 }
                 $scope._users_data = [$scope._users_total, $scope._users_download, $scope._users_upload];
+
+                $scope._users_option = {
+                    scales: {
+                        yAxes: [
+                            {
+                                scaleLabel: {
+                                    display: true,
+                                    fontSize: 20,
+                                    labelString: '내부사용자'
+                                }
+                            }
+                        ],
+                        xAxes: [
+                            {
+                                scaleLabel: {
+                                    display: true,
+                                    fontSize: 20,
+                                    labelString: '사용량(Mbit/s)'
+                                }
+                            }
+                        ]
+                    }
+                };
+
                 // for (var i = 0; i < _users.length; i++) {
                 //
                 // }
@@ -431,7 +455,7 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
         $scope.colors = ['#ff6384', '#45b7cd', '#ffe200'];
         $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
 
-        console.log($scope.options);
+        // console.log($scope.options);
         // for users data graph
         // $scope.users_label = $scope._users_label;
         // $scope.users_series = $scope._users_series;
