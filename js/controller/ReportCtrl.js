@@ -250,7 +250,7 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
             if (i % 100 === 0) {
                 $scope.t = new Date($scope._history_rcv[i][0]);
                 $scope.label.push($scope.t.toLocaleString());
-                $scope.data_rcv_rate.push($scope._history_rcv[i][1]);
+                $scope.data_rcv_rate.push(Math.round($scope._history_rcv[i][1]*0.001));
             }
             $scope.raw_label.push($scope._history_rcv[i][0]);
             $scope.raw_data_rcv_rate.push($scope._history_rcv[i][1]);
@@ -289,7 +289,7 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
                 if (i % 100 === 0) {
                     // $scope.t = new Date($scope._history_trs[i][0]);
                     // $scope.labels.push($scope.t.toLocaleString());
-                    $scope.data_trs_rate.push($scope._history_trs[i][1]);
+                    $scope.data_trs_rate.push(Math.round($scope._history_trs[i][1]*0.001));
                 }
                 $scope.raw_data_trs_rate.push($scope._history_trs[i][1]);
             }
@@ -325,22 +325,65 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
             //     $scope.int_rcv_avg,
             //     $scope.int_trs_avg
             // ];
-            // for ng-repeat
+
+            // setting interface data for table
             $scope.int_data = [];
             for (var k = 0; k < $scope.int_date.length; k++){
                 $scope.int_data.push({
                     date : $scope.int_date[k],
-                    rcv_avg : Math.ceil($scope.int_rcv_avg[k]*0.001),
-                    trs_avg : Math.ceil($scope.int_trs_avg[k]*0.001)
+                    rcv_avg : Math.round($scope.int_rcv_avg[k]*0.001),
+                    trs_avg : Math.round($scope.int_trs_avg[k]*0.001)
                 });
             }
 
-            // setting for graph
+            // setting interface data for graph
             $scope.data = [
                 $scope.data_rcv_rate,
                 $scope.data_trs_rate
             ];
-
+            // get max
+            $scope.int_rcv_max = Math.max.apply(null, $scope.data_rcv_rate);
+            $scope.int_trs_max = Math.max.apply(null, $scope.data_trs_rate);
+            $scope.int_max = Math.max.apply(null, [$scope.int_rcv_max, $scope.int_trs_max]);
+            $scope.options = {
+                scales: {
+                    yAxes: [
+                        {
+                            id: 'y-axis-1',
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            scaleLabel: {
+                                display: true,
+                                fontSize: 20,
+                                labelString: '수신(Mbit/s)'
+                            },
+                            ticks: {
+                                max: Math.ceil($scope.int_max*0.001)*1000,
+                                min: 0,
+                                beginAtZero: true
+                            }
+                        },
+                        {
+                            id: 'y-axis-2',
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            scaleLabel: {
+                                display: true,
+                                fontSize: 20,
+                                labelString: '송신(Mbit/s)'
+                            },
+                            ticks: {
+                                max: Math.ceil($scope.int_max*0.001)*1000,
+                                min: 0,
+                                beginAtZero: true
+                            }
+                        }
+                    ]
+                }
+            };
+            console.log("int-max : "+$scope.int_rcv_max+" , "+$scope.int_trs_max+" , "+$scope.int_max);
             ReportData.getUserdata(function(data) {
                 console.log(data);
                 var _users = data['data']['collection'];
@@ -358,18 +401,18 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
                     $scope._users_from.push(t_from.toLocaleString());
                     var t_until = new Date(_users[i]['until']);
                     $scope._users_until.push(t_until.toLocaleString());
-                    $scope._users_total.push(Math.ceil(_users[i]['total_rate']*0.001));
-                    $scope._users_download.push(Math.ceil(_users[i]['dest_smoothed_rate']*0.001));
-                    $scope._users_upload.push(Math.ceil(_users[i]['source_smoothed_rate']*0.001));
+                    $scope._users_total.push(Math.round(_users[i]['total_rate']*0.001));
+                    $scope._users_download.push(Math.round(_users[i]['dest_smoothed_rate']*0.001));
+                    $scope._users_upload.push(Math.round(_users[i]['source_smoothed_rate']*0.001));
 
                     //
                     $scope._users_tb_data.push({
                         name : _users[i]['name'],
                         from : t_from.toLocaleString(),
                         until : t_until.toLocaleString(),
-                        total : Math.ceil(_users[i]['total_rate']*0.001),
-                        down : Math.ceil(_users[i]['dest_smoothed_rate']*0.001),
-                        up : Math.ceil(_users[i]['source_smoothed_rate']*0.001)
+                        total : Math.round(_users[i]['total_rate']*0.001),
+                        down : Math.round(_users[i]['dest_smoothed_rate']*0.001),
+                        up : Math.round(_users[i]['source_smoothed_rate']*0.001)
                     });
                 }
                 $scope._users_data = [$scope._users_total, $scope._users_download, $scope._users_upload];
@@ -384,27 +427,11 @@ reportApp.controller('ReportCtrl', function ReportCtrl($scope, $log, ReportData,
 
         // for interface graph
         $scope.labels = $scope.label;
-        $scope.series = ['p1p1-ext-rcv(단위:KB/S)', 'p1p1-int-trs(단위:KB/S)'];
-        $scope.colors = ['#45b7cd', '#ff6384', '#ff8e72'];
+        $scope.series = ['수신(단위:Mbit/s)', '송신(단위:Mbit/s)'];
+        $scope.colors = ['#ff6384', '#45b7cd', '#ffe200'];
         $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-        $scope.options = {
-            scales: {
-                yAxes: [
-                    {
-                        id: 'y-axis-1',
-                        type: 'linear',
-                        display: true,
-                        position: 'left'
-                    },
-                    {
-                        id: 'y-axis-2',
-                        type: 'linear',
-                        display: true,
-                        position: 'right'
-                    }
-                ]
-            }
-        };
+
+        console.log($scope.options);
         // for users data graph
         // $scope.users_label = $scope._users_label;
         // $scope.users_series = $scope._users_series;

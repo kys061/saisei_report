@@ -36,8 +36,8 @@
                     <tr>
                         <th>#</th>
                         <th>날짜</th>
-                        <th>수신 트래픽(Mbyte/s)</th>
-                        <th>송신 트래픽(Mbyte/s)</th>
+                        <th>수신 트래픽(Mbit/s)</th>
+                        <th>송신 트래픽(Mbit/s)</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -50,8 +50,8 @@
                         <tr ng-repeat="data in int_data">
                             <td>{{$index+1}}</td>
                             <td>{{ data.date }}</td>
-                            <td>{{ data.rcv_avg }} Mbyte/s</td>
-                            <td>{{ data.trs_avg }} Mbyte/s</td>
+                            <td>{{ data.rcv_avg }} Mbit/s</td>
+                            <td>{{ data.trs_avg }} Mbit/s</td>
                         </tr>
                     </tbody>
                 </table>
@@ -75,7 +75,7 @@
 
                         <canvas id="users" class="chart-horizontal-bar"
                                 chart-data="_users_data" chart-labels="_users_label"
-                                chart-series="_users_series">
+                                chart-series="_users_series" chart-colors="colors">
                         </canvas>
                     </div>
                 </div>
