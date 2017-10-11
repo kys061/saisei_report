@@ -93,7 +93,6 @@ reportApp.factory('ReportData', function ($http, $log, $base64, $window) {
                 $log.warn(data, status, headers, config);
             })
         },
-
         getIntRcvData: function(successcb) {
 
             $log.info("local : " + from+" : "+until);

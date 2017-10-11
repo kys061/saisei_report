@@ -19,6 +19,8 @@ var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'a
     .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
         cfpLoadingBarProvider.latencyThreshold = 500;
         // console.log("loading bar LOGGG!!!");
-    }]);
+    }]).run(function($rootScope) {
+        $rootScope.users_app_top1 = [];
+    });
 
 // 'htmlToPdfSave',

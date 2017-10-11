@@ -29,6 +29,14 @@
       "order" : "<total_rate",
       "limit" : "10",
       "with" : "total_rate>=0.01"
+    },
+    "user_app" : {
+      "class" : "user_app",
+      "section" : "users/:userID/applications/",
+      "attr" : "total_rate",
+      "order" : "<total_rate",
+      "limit" : "5",
+      "with" : "total_rate>=0.01"
     }
   }
 }
