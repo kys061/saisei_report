@@ -2,14 +2,15 @@ reportApp.service('SharedData', function () {
     var sharedData = {};
     sharedData.currentDurationState = true;
     sharedData.currentBtnState = false;
+    sharedData.currentState = true;
     sharedData.from;
     sharedData.until;
     return {
-        setBtnCurrentState: function() {
-            sharedData.currentBtnState = true;
+        setCurrentState: function(arg) {
+            sharedData.currentState = arg;
         },
-        getBtnCurrentState: function() {
-            return sharedData.currentBtnState;
+        getCurrentState: function() {
+            return sharedData.currentState;
         },
         getSharedData: function () {
             return sharedData;

@@ -7,18 +7,18 @@ var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'a
     $routeProvider
         // .when('/', {
         //     templateUrl: "index.html",
-        //     controller: "ReportController"
+        //     controller: "MainCtrl"
         // })
         .when('/report', {
             templateUrl : "templates/report.html",
             controller: "ReportCtrl"
-        });
+        })
+        .otherwise({redirectTo: '/'});
 
     $locationProvider.html5Mode(true);
     })
     .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
-        cfpLoadingBarProvider.latencyThreshold = 500;
-        // console.log("loading bar LOGGG!!!");
+        cfpLoadingBarProvider.latencyThreshold = 900;
     }]).run(function($rootScope) {
         $rootScope.users_app_top1 = [];
     });

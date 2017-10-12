@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <style>
-        #tbl {
-            margin-top: 30px;
+        .table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+            text-align: center;
         }
     </style>
     <meta charset="UTF-8">
@@ -22,18 +22,12 @@
     <script src="./node_modules/angular-momentjs/angular-momentjs.min.js"></script>
     <script src="./lib/jquery.min.js"></script>
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>-->
-    <script src="./node_modules/chart.js/dist/Chart.js"></script>
-    <script src="./node_modules/angular-chart.js/angular-chart.js"></script>
-    <script src="./node_modules/sugar/dist/sugar.min.js"></script>
     <!--<script src="./node_modules/tableexport/"></script>-->
-    <script src="./lib/alasql.min.js"></script>
-    <script src="./node_modules/file-saverjs/FileSaver.js"></script>
-    <script src="./node_modules/tableexport/dist/js/tableexport.js"></script>
     <!--<script src="./lib/jquery.table2excel.js"></script>-->
     <!--<script src="./css/bootstrap.min.css"></script>-->
     <!--<script src="./css/app.css"></script>-->
     <!--<script src="./lib/bootstrap.min.js"></script>-->
-    <title>saisei report</title>
+    <title>SAISEI REPORT</title>
 </head>
 <body ng-app="reportApp">
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -47,22 +41,9 @@
             </button>
             <a class="navbar-brand" href="#"><b>Saisei Report</b></a>
         </div>
-        <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
-
-        <!--</div>-->
-        <!--<form class="navbar-form pull-right" role="search" ng-controller="ReportCtrl">-->
-            <!--<div class="form-group" ng-show="currentBtnState">-->
-                <!--<div class="btn-group btn-group-sm" role="group" aria-label="First group">-->
-                    <!--<button id="export" ng-click="export()" type="submit" class="btn btn-default" data-loading-text="Loading..." promise-btn>PDF 출력</button>-->
-                    <!--<button ng-click="export_xls()" type="submit" class="btn btn-default" data-loading-text="Loading...">CSV 출력</button>-->
-                    <!--<a href="/saisei_report/" ng-click="back()" class="btn btn-default">뒤로가기(BACK)</a>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</form>-->
     </div>
 </nav>
 
-<!--<div class="container" ng-controller="MainCtrl" style="margin-top: 60px; width:960px">-->
 <div class="container" ng-controller="MainCtrl" style="margin-top: 60px">
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
@@ -73,7 +54,6 @@
         </div>
 
     </div>
-    <!--<legend> </legend>-->
     <div id="select_page" ng-show="currentState">
         <div class="row">
             <div class="col-lg-8 col-sm-8">
@@ -84,21 +64,17 @@
                             <label for="inputFrom" class="col-lg-2 control-label">Strat(시작)</label>
                             <div class="col-lg-7">
                                 <input datetime-picker id="inputFrom" class="form-control" ng-model="date_from" date-format="yyyy-MM-dd HH:mm:ss" />
-                                <!--<input type="text" class="form-control" id="inputEmail" placeholder="Email">-->
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputUntil" class="col-lg-2 control-label">End(종료)</label>
                             <div class="col-lg-7">
                                 <input datetime-picker id="inputUntil" class="form-control" ng-model="date_until" date-format="yyyy-MM-dd HH:mm:ss" />
-                                <!--<input type="password" class="form-control" id="inputPassword" placeholder="Password">-->
                             </div>
                         </div>
                         <legend></legend>
                         <div class="form-group">
                             <div class="col-lg-10 col-lg-offset-2">
-                                <!--<button ng-click="sendDate()" type="reset" class="btn btn-default">sendDate</button>-->
-                                <!--<button id="export" ng-click="export()" type="submit" class="btn btn-primary" data-loading-text="Loading..." promise-btn>export</button>-->
                                 <a ng-click="sendDate()" class="btn btn-primary">보고서 만들기</a>
                             </div>
                         </div>
@@ -108,38 +84,28 @@
         </div>
     </div>
     <ng-view></ng-view>
-
-    <div id="myModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"></h4>
-                </div>
-                <div class="modal-body">
-                    <p></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 
-<!--<div ng-view></div>-->
-<!--<ng-view></ng-view>-->
-
-
+<script src="./js/app.js"></script>
+<script src="./js/controller/MainCtrl.js"></script>
+<script src="./js/controller/ReportCtrl.js"></script>
+<script src="./js/service/ReportData.js"></script>
+<script src="./js/service/UserAppData.js"></script>
+<script src="./js/service/SharedData.js"></script>
 <!--<script src="./node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>-->
 <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="./node_modules/chart.js/dist/Chart.js"></script>
+<script src="./node_modules/angular-chart.js/angular-chart.js"></script>
+<script src="./node_modules/sugar/dist/sugar.min.js"></script>
 <script src='./node_modules/pdfmake/build/pdfmake.min.js'></script>
 <script src='./node_modules/pdfmake/build/vfs_fonts.js'></script>
 <script src='./node_modules/html2canvas/dist/html2canvas.min.js'></script>
 <script src="./node_modules/angular-promise-buttons/dist/angular-promise-buttons.min.js"></script>
 <script src="./node_modules/ng-table-to-csv/dist/ng-table-to-csv.min.js"></script>
 <script src="./lib/angularjs-datetime-picker.js"></script>
+<script src="./lib/alasql.min.js"></script>
+<script src="./node_modules/file-saverjs/FileSaver.js"></script>
+<script src="./node_modules/tableexport/dist/js/tableexport.js"></script>
 <!--<script src="./node_modules/angularjs-datetime-picker/angularjs-datetime-picker.js"></script>-->
 <!--<script src="./node_modules/angularjs-datepicker/dist/angular-datepicker.min.js"></script>-->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>-->
@@ -147,11 +113,5 @@
 <!--<script src="https://cdn.rawgit.com/niklasvh/html2canvas/0.5.0-alpha2/dist/html2canvas.min.js"></script>-->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.debug.js"></script>-->
 <!--<script src="./node_modules/angular-save-html-to-pdf/dist/saveHtmlToPdf.min.js"></script>-->
-<script src="./js/app.js"></script>
-<script src="./js/controller/MainCtrl.js"></script>
-<script src="./js/controller/ReportCtrl.js"></script>
-<script src="./js/service/ReportData.js"></script>
-<script src="./js/service/UserAppData.js"></script>
-<script src="./js/service/SharedData.js"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@ reportApp.controller('MainCtrl', function MainCtrl($scope, $log, $route, $templa
         var until;
         var today = new $window.Sugar.Date(new Date());
 
+        // $scope.currentState = SharedData.getCurrentState();
         $scope.currentState = true;
         $scope.currentDurationState = SharedData.currentDurationState;
         $scope.$watch('date_from', function(val) {
@@ -32,12 +33,13 @@ reportApp.controller('MainCtrl', function MainCtrl($scope, $log, $route, $templa
                 alert('리포트 시작 시점은 현재보다 미래로 설정할 수 없습니다!!');
             }
             else {
-                $log.info("MainCtrl: "+from+" : "+ until);
+                // $scope.currentState = SharedData.setCurrentState(false);
+                // $scope.currentState = SharedData.getCurrentState();
                 $scope.currentState = false;
                 $scope.currentDurationState = false;
                 SharedData.setFrom(from);
                 SharedData.setUntil(until);
-                $location.path('/report')
+                $location.path('/report');
             }
             // var currentPageTemplate = $route.current.templateUrl;
             // $templateCache.remove(currentPageTemplate);
