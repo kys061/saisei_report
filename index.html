@@ -5,12 +5,17 @@
         .table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
             text-align: center;
         }
+        /* override styles here */
+        .notie-container {
+            box-shadow: none;
+        }
     </style>
     <meta charset="UTF-8">
     <base href="/saisei_report/">
     <!--<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="./css/simple.min.css">
     <link rel='stylesheet' href='./node_modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
+    <link rel="stylesheet" type="text/css" href="./node_modules/notie/dist/notie.css">
     <!--<link href="./node_modules/angularjs-datepicker/dist/angular-datepicker.css" rel="stylesheet" type="text/css" />-->
     <!--<link rel="stylesheet" href="./node_modules/angularjs-datetime-picker/angularjs-datetime-picker.css" />-->
     <link rel="stylesheet" href="./css/angularjs-datetime-picker.css" />
@@ -45,14 +50,13 @@
 </nav>
 
 <div class="container" ng-controller="MainCtrl" style="margin-top: 60px">
-    <div class="jumbotron jumbotron-fluid">
+    <div class="jumbotron jumbotron-fluid" ng-show="currentState">
         <div class="container">
             <h1 class="display-3">Saisei Report</h1>
             <hr class="my-4">
             <p class="lead">기간을 선택하여 리포트를 만들 수 있습니다.
             </p>
         </div>
-
     </div>
     <div id="select_page" ng-show="currentState">
         <div class="row">
@@ -63,13 +67,13 @@
                         <div class="form-group">
                             <label for="inputFrom" class="col-lg-2 control-label">Strat(시작)</label>
                             <div class="col-lg-7">
-                                <input datetime-picker id="inputFrom" class="form-control" ng-model="date_from" date-format="yyyy-MM-dd HH:mm:ss" />
+                                <input datetime-picker id="inputFrom" class="form-control" ng-model="date_from" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="true"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputUntil" class="col-lg-2 control-label">End(종료)</label>
                             <div class="col-lg-7">
-                                <input datetime-picker id="inputUntil" class="form-control" ng-model="date_until" date-format="yyyy-MM-dd HH:mm:ss" />
+                                <input datetime-picker id="inputUntil" class="form-control" ng-model="date_until" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="true"/>
                             </div>
                         </div>
                         <legend></legend>
@@ -106,6 +110,7 @@
 <script src="./lib/alasql.min.js"></script>
 <script src="./node_modules/file-saverjs/FileSaver.js"></script>
 <script src="./node_modules/tableexport/dist/js/tableexport.js"></script>
+<script src="./node_modules/notie/dist/notie.js"></script>
 <!--<script src="./node_modules/angularjs-datetime-picker/angularjs-datetime-picker.js"></script>-->
 <!--<script src="./node_modules/angularjs-datepicker/dist/angular-datepicker.min.js"></script>-->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>-->

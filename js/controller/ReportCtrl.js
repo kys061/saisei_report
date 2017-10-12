@@ -88,11 +88,15 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
     $scope.export_xls = function(){
         var data1 = alasql('SELECT * FROM HTML("#table1",{headers:true})');
         var data2 = alasql('SELECT * FROM HTML("#table2",{headers:true})');
-        var data3 = alasql('SELECT * FROM HTML("#table3",{headers:true})');
+    var data3 = alasql('SELECT * FROM HTML("#table3",{headers:true})');
 
-        alasql('SELECT * INTO CSV("interface.csv",{headers:true, separator:","}) FROM ?', [data1]);
-        alasql('SELECT * INTO CSV("user_traffic.csv",{headers:true, separator:","}) FROM ?', [data2]);
-        alasql('SELECT * INTO CSV("user_app_traffic.csv",{headers:true, separator:","}) FROM ?', [data3]);
+    alasql('SELECT * INTO CSV("interface.csv",{headers:true, separator:","}) FROM ?', [data1]);
+    alasql('SELECT * INTO CSV("user_traffic.csv",{headers:true, separator:","}) FROM ?', [data2]);
+    alasql('SELECT * INTO CSV("user_app_traffic.csv",{headers:true, separator:","}) FROM ?', [data3]);
+
+    notie.alert({ type: 'error', text: 'csv파일이 생성되었습니다!' });
+
+
     };
 
 
@@ -155,7 +159,13 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                     ]
                 };
                 console.log("ratio : " + ratio);
-                pdfMake.createPdf($scope.docConfig).download("test.pdf",function() { alert('pdf 다운로드가 완료 되었습니다!'); });
+                pdfMake.createPdf($scope.docConfig).download("test.pdf",function() {
+                    // alert('pdf 다운로드가 완료 되었습니다!');
+                    // notie.confirm({ text: 'pdf를 다운 받으시겠습니까?' }, function() {
+                        notie.alert({ type: 'error', text: 'pdf 다운로드가 완료 되었습니다!!' });
+                    // });
+
+                });
             }
         });
     };
