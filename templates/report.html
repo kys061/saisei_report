@@ -1,15 +1,49 @@
 <head>
     <style>
-        .table { border: 1.5px solid; }
-        .table thead > tr > th { border-bottom: none; }
-        .table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td { border: 1.5px solid; }
-        .panel { border: 0.08em solid; }
-        .panel-heading { border: 0.08em solid; }
-        .jumbotron{ padding : 30px 30px 30px 30px; border: 1.5px solid;}
+        .table {
+            border: 1.5px solid;
+        }
+
+        .table thead>tr>th {
+            border-bottom: none;
+        }
+
+        .table thead>tr>th,
+        .table tbody>tr>th,
+        .table tfoot>tr>th,
+        .table thead>tr>td,
+        .table tbody>tr>td,
+        .table tfoot>tr>td {
+            border: 1.5px solid;
+        }
+
+        th {
+            font-size: 1.3em;
+        }
+
+        td {
+            color: #444444;
+            font-size: 1.05em;
+        }
+
+        .panel {
+            border: 0.08em solid;
+        }
+
+        .panel-heading {
+            border: 0.08em solid;
+        }
+
+        .jumbotron {
+            padding: 30px 30px 30px 30px;
+            border: 1.5px solid;
+        }
+
         #loading-bar .bar {
             background: #33ba3a;
             height: 15px;
         }
+
         #loading-bar-spinner {
             pointer-events: none;
             -webkit-pointer-events: none;
@@ -29,37 +63,71 @@
             width: 120px;
             height: 120px;
 
-            border:  solid 4px transparent;
-            border-top-color:  #000;
+            border: solid 4px transparent;
+            border-top-color: #000;
             border-left-color: #ccc;
             border-radius: 50%;
 
             -webkit-animation: loading-bar-spinner 400ms linear infinite;
-            -moz-animation:    loading-bar-spinner 400ms linear infinite;
-            -ms-animation:     loading-bar-spinner 400ms linear infinite;
-            -o-animation:      loading-bar-spinner 400ms linear infinite;
-            animation:         loading-bar-spinner 400ms linear infinite;
+            -moz-animation: loading-bar-spinner 400ms linear infinite;
+            -ms-animation: loading-bar-spinner 400ms linear infinite;
+            -o-animation: loading-bar-spinner 400ms linear infinite;
+            animation: loading-bar-spinner 400ms linear infinite;
         }
 
         @-webkit-keyframes loading-bar-spinner {
-            0%   { -webkit-transform: rotate(0deg);   transform: rotate(0deg); }
-            100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
         }
+
         @-moz-keyframes loading-bar-spinner {
-            0%   { -moz-transform: rotate(0deg);   transform: rotate(0deg); }
-            100% { -moz-transform: rotate(360deg); transform: rotate(360deg); }
+            0% {
+                -moz-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -moz-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
         }
+
         @-o-keyframes loading-bar-spinner {
-            0%   { -o-transform: rotate(0deg);   transform: rotate(0deg); }
-            100% { -o-transform: rotate(360deg); transform: rotate(360deg); }
+            0% {
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
         }
+
         @-ms-keyframes loading-bar-spinner {
-            0%   { -ms-transform: rotate(0deg);   transform: rotate(0deg); }
-            100% { -ms-transform: rotate(360deg); transform: rotate(360deg); }
+            0% {
+                -ms-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -ms-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
         }
+
         @keyframes loading-bar-spinner {
-            0%   { transform: rotate(0deg);   transform: rotate(0deg); }
-            100% { transform: rotate(360deg); transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -75,13 +143,13 @@
     <!--<button pdf-save-button="idOne" pdf-name="someone.pdf" class="btn">print as pdf</button>-->
     <!--<button pdf-save-button="idOne" pdf-name="someone.pdf" class="btn">print report as pdf</button>-->
     <div id="first_page">
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container">
-                    <h1 class="display-3">Saisei Report</h1>
-                    <hr class="my-4">
-                    <p class="lead">기간 : ({{from}} ~ {{until}})</p>
-                </div>
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-3">Saisei Report</h1>
+                <hr class="my-4">
+                <p class="lead">기간 : ({{from}} ~ {{until}})</p>
             </div>
+        </div>
         <div class="row">
             <div class="col-lg-12 col-sm-12">
                 <div class="panel panel-default">
@@ -89,9 +157,7 @@
                         <h4><b>인터페이스 트래픽({{ int_name }})</b></h4>
                     </div>
                     <div class="panel-body">
-                        <canvas id="line" class="chart chart-line" chart-data="data"
-                                chart-labels="labels" chart-series="series" chart-options="options"
-                                chart-dataset-override="datasetOverride" chart-colors="colors">
+                        <canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-colors="colors">
                         </canvas>
                     </div>
                 </div>
@@ -109,12 +175,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="data in int_data">
-                            <td>{{$index+1}}</td>
-                            <td>{{ data.date }}</td>
-                            <td>{{ data.rcv_avg }} Mbit/s</td>
-                            <td>{{ data.trs_avg }} Mbit/s</td>
-                        </tr>
+                    <tr ng-repeat="data in int_data">
+                        <td>{{$index+1}}</td>
+                        <td>{{ data.date }}</td>
+                        <td>{{ data.rcv_avg }} Mbit/s</td>
+                        <td>{{ data.trs_avg }} Mbit/s</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -125,12 +191,11 @@
         <div class="row">
             <div class="col-lg-12 col-sm-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h4>사용자 트래픽</h4></div>
+                    <div class="panel-heading">
+                        <h4><b>사용자 트래픽</b></h4>
+                    </div>
                     <div class="panel-body">
-                        <canvas id="users" class="chart-horizontal-bar"
-                                chart-data="_users_data" chart-labels="_users_label"
-                                chart-series="_users_series" chart-colors="colors"
-                                chart-options="_users_option">
+                        <canvas id="users" class="chart-horizontal-bar" chart-data="_users_data" chart-labels="_users_label" chart-series="_users_series" chart-colors="colors" chart-options="_users_option">
                         </canvas>
                     </div>
                 </div>
@@ -168,12 +233,11 @@
         <div class="row">
             <div class="col-lg-12 col-sm-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h4>사용자-어플리케이션 연관 추이</h4></div>
+                    <div class="panel-heading">
+                        <h4><b>사용자-어플리케이션 연관 추이</b></h4>
+                    </div>
                     <div class="panel-body">
-                        <canvas id="users_app" class="chart-horizontal-bar"
-                                chart-data="_users_app_data" chart-labels="_users_app_label"
-                                chart-series="_users_app_series" chart-colors="colors"
-                                chart-options="_users_app_option">
+                        <canvas id="users_app" class="chart-horizontal-bar" chart-data="_users_app_data" chart-labels="_users_app_label" chart-series="_users_app_series" chart-colors="colors" chart-options="_users_app_option">
                         </canvas>
                     </div>
                 </div>

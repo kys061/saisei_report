@@ -1,4 +1,4 @@
-reportApp.service('SharedData', function () {
+reportApp.service('SharedData', function() {
     var sharedData = {};
     sharedData.currentDurationState = true;
     sharedData.currentBtnState = false;
@@ -12,7 +12,7 @@ reportApp.service('SharedData', function () {
         getCurrentState: function() {
             return sharedData.currentState;
         },
-        getSharedData: function () {
+        getSharedData: function() {
             return sharedData;
         },
         setFrom: function(from) {
