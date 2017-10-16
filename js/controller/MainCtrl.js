@@ -4,24 +4,33 @@ reportApp.controller('MainCtrl', function MainCtrl($scope, $log, $route, $templa
         var from;
         var until;
         var today = new $window.Sugar.Date(new Date());
-
+        $scope.select2model = [];
+        $scope.select2data = [
+            {id: 1, label: "인터페이스 트래픽"},
+            {id: 2, label: "사용자 트래픽"},
+            {id: 3, label: "사용자-어플리케이션 트래픽"}
+            ];
+        $scope.select2settings = {};
         // $scope.currentState = SharedData.getCurrentState();
         $scope.currentState = true;
         $scope.currentDurationState = SharedData.currentDurationState;
         $scope.$watch('date_from', function(val) {
             from = val;
+            console.log(val);
             // $scope.from = new Date(val);
         });
         $scope.$watch('date_until', function(val) {
             until = val;
+            console.log(val);
             // $scope.until = new Date(val);
         });
 
         $scope.sendDate = function() {
             var duration = $window.Sugar.Date.range(from, until).every('days').length;
+            console.log(duration);
             var _until = new $window.Sugar.Date(until);
             var _from = new $window.Sugar.Date(from);
-            console.log(_until.isFuture());
+            console.log("from : until -> " + _from.raw+ ':'+ _until.raw);
             if (from === undefined || until === undefined){
                 // $window.$('#myModal').modal('show');
                 // alert('리포트 기간을 넣어주세요!!!');

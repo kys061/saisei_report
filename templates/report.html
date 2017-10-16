@@ -1,33 +1,93 @@
-<!--<div id="exportthis" class="container" pdf-save-content="idOne" style="margin-top: 60px; width:960px">-->
+<head>
+    <style>
+        .table { border: 1.5px solid; }
+        .table thead > tr > th { border-bottom: none; }
+        .table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td { border: 1.5px solid; }
+        .panel { border: 0.08em solid; }
+        .panel-heading { border: 0.08em solid; }
+        .jumbotron{ padding : 30px 30px 30px 30px; border: 1.5px solid;}
+        #loading-bar .bar {
+            background: #33ba3a;
+            height: 15px;
+        }
+        #loading-bar-spinner {
+            pointer-events: none;
+            -webkit-pointer-events: none;
+            -webkit-transition: 350ms linear all;
+            -moz-transition: 350ms linear all;
+            -o-transition: 350ms linear all;
+            transition: 350ms linear all;
+        }
+
+        #loading-bar-spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+        }
+
+        #loading-bar-spinner .spinner-icon {
+            width: 120px;
+            height: 120px;
+
+            border:  solid 4px transparent;
+            border-top-color:  #000;
+            border-left-color: #ccc;
+            border-radius: 50%;
+
+            -webkit-animation: loading-bar-spinner 400ms linear infinite;
+            -moz-animation:    loading-bar-spinner 400ms linear infinite;
+            -ms-animation:     loading-bar-spinner 400ms linear infinite;
+            -o-animation:      loading-bar-spinner 400ms linear infinite;
+            animation:         loading-bar-spinner 400ms linear infinite;
+        }
+
+        @-webkit-keyframes loading-bar-spinner {
+            0%   { -webkit-transform: rotate(0deg);   transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+        }
+        @-moz-keyframes loading-bar-spinner {
+            0%   { -moz-transform: rotate(0deg);   transform: rotate(0deg); }
+            100% { -moz-transform: rotate(360deg); transform: rotate(360deg); }
+        }
+        @-o-keyframes loading-bar-spinner {
+            0%   { -o-transform: rotate(0deg);   transform: rotate(0deg); }
+            100% { -o-transform: rotate(360deg); transform: rotate(360deg); }
+        }
+        @-ms-keyframes loading-bar-spinner {
+            0%   { -ms-transform: rotate(0deg);   transform: rotate(0deg); }
+            100% { -ms-transform: rotate(360deg); transform: rotate(360deg); }
+        }
+        @keyframes loading-bar-spinner {
+            0%   { transform: rotate(0deg);   transform: rotate(0deg); }
+            100% { transform: rotate(360deg); transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
 <div id="exportthis" class="container" pdf-save-content="idOne" style="margin-top: 60px;">
     <div class="btn-group pull-right" role="group" aria-label="First group">
         <button id="export" ng-click="export()" type="submit" class="btn btn-primary" data-loading-text="Loading..." promise-btn>PDF 출력</button>
         <button ng-click="export_xls()" type="submit" class="btn btn-primary" data-loading-text="Loading...">CSV 출력</button>
         <a href="/saisei_report/" ng-click="back()" class="btn btn-primary">뒤로가기(BACK)</a>
     </div>
-    <div id="page_header" class="page-header">
+    <div class="page-header">
     </div>
     <!--<button pdf-save-button="idOne" pdf-name="someone.pdf" class="btn">print as pdf</button>-->
     <!--<button pdf-save-button="idOne" pdf-name="someone.pdf" class="btn">print report as pdf</button>-->
     <div id="first_page">
-        <div id="page_header" class="page-header">
-            <div class="jumbotron jumbotron-fluid" style="padding : 30px 30px 30px 30px;">
+            <div class="jumbotron jumbotron-fluid">
                 <div class="container">
                     <h1 class="display-3">Saisei Report</h1>
                     <hr class="my-4">
                     <p class="lead">기간 : ({{from}} ~ {{until}})</p>
                 </div>
             </div>
-            <!--<h1><b>Saisei Report</b></h1>-->
-            <!--<p>기간 : ({{from}} ~ {{until}})</p>-->
-        </div>
-        <!--<div class="page-header" style="width: 600px">-->
-            <!--<h2>주간 인터페이스({{ int_name }}) 트래픽</h2>-->
-        <!--</div>-->
         <div class="row">
             <div class="col-lg-12 col-sm-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h4>인터페이스 트래픽({{ int_name }})</h4></div>
+                    <div class="panel-heading">
+                        <h4><b>인터페이스 트래픽({{ int_name }})</b></h4>
+                    </div>
                     <div class="panel-body">
                         <canvas id="line" class="chart chart-line" chart-data="data"
                                 chart-labels="labels" chart-series="series" chart-options="options"
@@ -39,7 +99,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12 col-sm-12">
-                <table id="table1" class="table table-bordered table-hover">
+                <table id="table1" class="table table-hover">
                     <thead>
                     <tr>
                         <th>#</th>
@@ -78,7 +138,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12 col-sm-12">
-                <table id="table2" class="table table-bordered table-hover">
+                <table id="table2" class="table table-hover">
                     <thead>
                     <tr>
                         <th>#</th>
@@ -121,7 +181,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12 col-sm-12">
-                <table id="table3" class="table table-bordered table-hover">
+                <table id="table3" class="table table-hover">
                     <thead>
                     <tr>
                         <th>#</th>

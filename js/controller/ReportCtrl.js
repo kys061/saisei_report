@@ -1,18 +1,30 @@
 'use strict';
 
-reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log, ReportData, SharedData, UserAppData, $location, $route, $window) {
+reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log, ReportData, SharedData, UserAppData, $location, $route, $window, cfpLoadingBar) {
 
     $scope.$on('$routeChangeStart', function (scope, next, current) {
         SharedData.setCurrentState(true);
         console.log("change back");
         $location.path('/');
         $window.location.href='/saisei_report/';
-        // if (next.$$route.controller != "Your Controller Name") {
-        //     // Show here for your model, and do what you need**
-        // }
     });
+    $scope.complete_count = 0;
+    $scope.complete_check_count = 13; // 나중에 계산 수식 필요~!!
+    $rootScope.$on('cfpLoadingBar:loaded', function(){
+        $scope.complete_count += 1;
+        console.log("complete_count : " + $scope.complete_count);
+    });
+
+    $rootScope.$on('cfpLoadingBar:completed', function(){
+        if($scope.complete_count === $scope.complete_check_count) {
+            notie.alert({type: 'info', stay: 'true', text: 'SAISEI 트래픽 보고서가 완성 되었습니다!!!'});
+        }
+    });
+
+
     var from = SharedData.getFrom();
     var until = SharedData.getUntil();
+    console.log(from + " - " + until);
     //get div size init
     var size = {};
     size.first_page = {};
@@ -299,12 +311,15 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                             scaleLabel: {
                                 display: true,
                                 fontSize: 14,
-                                labelString: '수신(Mbit/s)'
+                                labelString: '수신(Mbit/s)',
+                                fontStyle: "bold"
                             },
                             ticks: {
                                 max: Math.ceil($scope.int_max*0.001)*1000,
                                 min: 0,
-                                beginAtZero: true
+                                beginAtZero: true,
+                                fontSize: 12,
+                                fontStyle: "bold"
                             }
                         },
                         {
@@ -315,12 +330,29 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                             scaleLabel: {
                                 display: true,
                                 fontSize: 14,
-                                labelString: '송신(Mbit/s)'
+                                labelString: '송신(Mbit/s)',
+                                fontStyle: "bold"
                             },
                             ticks: {
                                 max: Math.ceil($scope.int_max*0.001)*1000,
                                 min: 0,
-                                beginAtZero: true
+                                beginAtZero: true,
+                                fontSize: 12,
+                                fontStyle: "bold"
+                            }
+                        }
+                    ],
+                    xAxes: [
+                        {
+                            ticks: {
+                                fontSize: 12,
+                                fontStyle: "bold"
+                            },
+                            scaleLabel: {
+                                display: true,
+                                fontSize: 14,
+                                labelString: '시간',
+                                fontStyle: "bold"
                             }
                         }
                     ]
@@ -368,19 +400,29 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                     scales: {
                         yAxes: [
                             {
+                                ticks: {
+                                    fontSize: 12,
+                                    fontStyle: "bold"
+                                },
                                 scaleLabel: {
                                     display: true,
                                     fontSize: 14,
-                                    labelString: '내부사용자'
+                                    labelString: '내부사용자',
+                                    fontStyle: "bold"
                                 }
                             }
                         ],
                         xAxes: [
                             {
+                                ticks: {
+                                    fontSize: 12,
+                                    fontStyle: "bold"
+                                },
                                 scaleLabel: {
                                     display: true,
                                     fontSize: 14,
-                                    labelString: '사용량(Mbit/s)'
+                                    labelString: '사용량(Mbit/s)',
+                                    fontStyle: "bold"
                                 }
                             }
                         ]
@@ -446,7 +488,8 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                             +"3."+ data['data']['collection'][2]['name']+")"
                         );
 
-                    })
+                    });
+                    console.log("status : "+cfpLoadingBar.status());
                 }
                 $scope._users_app_data = [
                     $scope._users_app_top1,
@@ -458,19 +501,29 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                     scales: {
                         xAxes: [
                             {
+                                ticks: {
+                                    fontSize: 12,
+                                    fontStyle: "bold"
+                                },
                                 scaleLabel: {
                                     display: true,
                                     fontSize: 14,
-                                    labelString: 'APP 사용량(Mbit/s)'
+                                    labelString: 'APP 사용량(Mbit/s)',
+                                    fontStyle: "bold"
                                 }
                             }
                         ],
                         yAxes: [
                             {
+                                ticks: {
+                                    fontSize: 12,
+                                    fontStyle: "bold"
+                                },
                                 scaleLabel: {
                                     display: true,
                                     fontSize: 14,
-                                    labelString: '사용자 어플리케이션(Top1,Top2,Top3)'
+                                    labelString: '사용자 어플리케이션(Top1,Top2,Top3)',
+                                    fontStyle: "bold"
                                 }
                             }
                         ]

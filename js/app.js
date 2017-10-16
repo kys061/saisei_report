@@ -1,6 +1,10 @@
 'use strict';
 
-var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'angular-momentjs',  'angular-loading-bar', 'angularPromiseButtons', 'angularjs-datetime-picker', 'ngTableToCsv'])    .config(function($routeProvider, $locationProvider, $momentProvider){
+var reportApp = angular.module('reportApp', [
+    "ngRoute", 'base64', 'chart.js', 'angular-momentjs', 'angular-loading-bar', 'angularPromiseButtons',
+    'angularjs-datetime-picker', 'ngTableToCsv', 'angularjs-dropdown-multiselect', 'moment-picker'
+])
+    .config(function($routeProvider, $locationProvider, $momentProvider){
     $momentProvider
         .asyncLoading(false)
         .scriptUrl('./lib/moment.min.js');
@@ -19,6 +23,8 @@ var reportApp = angular.module('reportApp', ["ngRoute", 'base64', 'chart.js', 'a
     })
     .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
         cfpLoadingBarProvider.latencyThreshold = 900;
+        cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+        cfpLoadingBarProvider.spinnerTemplate = '<div id="loading-bar-spinner"><div class="spinner-icon"></div></div>';
     }]).run(function($rootScope) {
         $rootScope.users_app_top1 = [];
     });
