@@ -1,18 +1,14 @@
-reportApp.service('ReportConfig', function($http, $q) {
-    var _this = this;
+reportApp.service('ReportConfig', function() {
+    var Config = function() {
+        var self = this;
 
-    this.promiseToHaveData = function() {
-        var defer = $q.defer();
+        this.getConfig = function() {
+            $.getJSON("./config/report-config.json", function (d) {
+                result = d.config;
+            });
+            return result;
+        };
+    };
 
-        $http.get('../../config/report-config.json')
-            .then(function onSuccess(response) {
-            angular.extend(_this, response);
-            defer.resolve();
-        })
-            .catch(function onError(response) {
-            console.log(response);
-        });
-
-        return defer.promise;
-    }
+    return Config;
 });

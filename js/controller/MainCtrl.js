@@ -41,8 +41,6 @@ reportApp.controller('MainCtrl', function MainCtrl($scope, $log, $route, $templa
         var _from = new $window.Sugar.Date(from);
         console.log("from : until -> " + _from.raw + ':' + _until.raw);
         if (from === undefined || until === undefined) {
-            // $window.$('#myModal').modal('show');
-            // alert('리포트 기간을 넣어주세요!!!');
             notie.alert({
                 type: 'error',
                 text: '리포트 기간을 넣어주세요!!!'

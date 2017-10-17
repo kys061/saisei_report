@@ -19,11 +19,12 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
         if ($scope.complete_count === $scope.complete_check_count) {
             notie.alert({
                 type: 'info',
+                stay: 'true',
+                time: 30,
                 text: 'SAISEI 트래픽 보고서가 완성 되었습니다!!!'
             });
         }
     });
-
 
     var from = SharedData.getFrom();
     var until = SharedData.getUntil();
