@@ -107,7 +107,7 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
         SharedData.setCurrentState(true);
         console.log("change back");
         $location.path('/');
-        $window.location.href = '/';
+        $window.location.href = '/saisei_report/';
     });
     $scope.complete_count = 0;
     $scope.complete_check_count = 13; // 나중에 계산 수식 필요~!!
