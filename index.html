@@ -1,13 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <style>
-        .table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+        .table-bordered>thead>tr>th,
+        .table-bordered>tbody>tr>th,
+        .table-bordered>tfoot>tr>th,
+        .table-bordered>thead>tr>td,
+        .table-bordered>tbody>tr>td,
+        .table-bordered>tfoot>tr>td {
             text-align: center;
         }
+
         /* override styles here */
+
         .notie-container {
             box-shadow: none;
+        }
+
+        .panel {
+            border: 4px solid;
+            border-color: #0b0c0d transparent;
+        }
+
+        #loading-bar-spinner {
+            pointer-events: none;
+            -webkit-pointer-events: none;
+            -webkit-transition: 350ms linear all;
+            -moz-transition: 350ms linear all;
+            -o-transition: 350ms linear all;
+            transition: 350ms linear all;
+        }
+
+        #loading-bar-spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+        }
+
+        #loading-bar-spinner .spinner-icon {
+            width: 120px;
+            height: 120px;
+
+            border: solid 4px transparent;
+            border-top-color: #000;
+            border-left-color: #ccc;
+            border-radius: 50%;
+
+            -webkit-animation: loading-bar-spinner 400ms linear infinite;
+            -moz-animation: loading-bar-spinner 400ms linear infinite;
+            -ms-animation: loading-bar-spinner 400ms linear infinite;
+            -o-animation: loading-bar-spinner 400ms linear infinite;
+            animation: loading-bar-spinner 400ms linear infinite;
+        }
+
+        @-webkit-keyframes loading-bar-spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @-moz-keyframes loading-bar-spinner {
+            0% {
+                -moz-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -moz-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @-o-keyframes loading-bar-spinner {
+            0% {
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @-ms-keyframes loading-bar-spinner {
+            0% {
+                -ms-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -ms-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes loading-bar-spinner {
+            0% {
+                transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
         }
     </style>
     <meta charset="UTF-8">
@@ -16,8 +115,10 @@
     <link rel="stylesheet" href="./css/simple.min.css">
     <link rel='stylesheet' href='./node_modules/angular-loading-bar/build/loading-bar.min.css' type='text/css' media='all' />
     <link rel="stylesheet" type="text/css" href="./node_modules/notie/dist/notie.css">
+    <!--<link href="./node_modules/angular-moment-picker/dist/angular-moment-picker.css" rel="stylesheet">-->
     <!--<link href="./node_modules/angularjs-datepicker/dist/angular-datepicker.css" rel="stylesheet" type="text/css" />-->
     <!--<link rel="stylesheet" href="./node_modules/angularjs-datetime-picker/angularjs-datetime-picker.css" />-->
+
     <link rel="stylesheet" href="./css/angularjs-datetime-picker.css" />
     <script src="./lib/angular.min.js"></script>
     <script src="./lib/angular-base64.js"></script>
@@ -34,6 +135,7 @@
     <!--<script src="./lib/bootstrap.min.js"></script>-->
     <title>SAISEI REPORT</title>
 </head>
+
 <body ng-app="reportApp">
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -60,39 +162,72 @@
     </div>
     <div id="select_page" ng-show="currentState">
         <div class="row">
+            <div class="col-lg-2 col-sm-2">
+            </div>
             <div class="col-lg-8 col-sm-8">
-                <form class="form-horizontal">
-                    <fieldset>
-                        <legend>리포트 기간 선택</legend>
-                        <div class="form-group">
-                            <label for="inputFrom" class="col-lg-2 control-label">Strat(시작)</label>
-                            <div class="col-lg-7">
-                                <input datetime-picker id="inputFrom" class="form-control" ng-model="date_from" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="true"/>
+                <div class="well bs-componet">
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <legend>리포트 기간 선택</legend>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">Strat(시작)</label>
+                                <div class="col-lg-7">
+                                    <!--<input class="form-control"-->
+                                    <!--ng-model="date_from"-->
+                                    <!--ng-model-options="{ updateOn: 'blur' }"-->
+                                    <!--placeholder="시작날짜를 선택해 주세요..."-->
+                                    <!--locale="ko"-->
+                                    <!--today="true"-->
+                                    <!--moment-picker="MainCtrl.date_from" />-->
+                                    <input datetime-picker id="inputFrom" class="form-control" ng-model="date_from" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="true" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputUntil" class="col-lg-2 control-label">End(종료)</label>
-                            <div class="col-lg-7">
-                                <input datetime-picker id="inputUntil" class="form-control" ng-model="date_until" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="true"/>
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">End(종료)</label>
+                                <div class="col-lg-7">
+                                    <!--<input class="form-control"-->
+                                    <!--ng-model="date_until"-->
+                                    <!--ng-model-options="{ updateOn: 'blur' }"-->
+                                    <!--placeholder="종료날짜를 선택해 주세요..."-->
+                                    <!--locale="ko"-->
+                                    <!--today="true"-->
+                                    <!--moment-picker="MainCtrl.date_until" />-->
+                                    <input datetime-picker id="inputUntil" class="form-control" ng-model="date_until" date-format="yyyy-MM-dd HH:mm:ss" close-on-select="true" />
+                                </div>
                             </div>
-                        </div>
-                        <legend></legend>
-                        <div class="form-group">
-                            <div class="col-lg-10 col-lg-offset-2">
-                                <a ng-click="sendDate()" class="btn btn-primary">보고서 만들기</a>
+                            <br>
+                            <legend>리포트 유형 선택</legend>
+                            <div class="form-group">
+                                <label for="select" class="col-lg-2 control-label">유형 선택</label>
+                                <div class="col-lg-7">
+                                    <div ng-dropdown-multiselect="" id="select" options="select2data" selected-model="select2model" extra-settings="select2settings"></div>
+                                </div>
                             </div>
-                        </div>
-                    </fieldset>
-                </form>
+                            <legend></legend>
+                            <div class="form-group">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                    <a ng-click="sendDate()" class="btn btn-primary pull-right">보고서 만들기</a>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+    <div id="loading-bar-container"></div>
     <ng-view></ng-view>
 </div>
 
 <script src="./js/app.js"></script>
 <script src="./js/controller/MainCtrl.js"></script>
 <script src="./js/controller/ReportCtrl.js"></script>
+<script src="./js/service/ReportConfig.js"></script>
+<script src="./js/service/ReportFrom.js"></script>
+<script src="./js/service/ReportUntil.js"></script>
+<script src="./js/service/ReportUrl.js"></script>
+<script src="./js/service/ReportQstring.js"></script>
+<script src="./js/service/ReportAuth.js"></script>
 <script src="./js/service/ReportData.js"></script>
 <script src="./js/service/UserAppData.js"></script>
 <script src="./js/service/SharedData.js"></script>
@@ -111,6 +246,9 @@
 <script src="./node_modules/file-saverjs/FileSaver.js"></script>
 <script src="./node_modules/tableexport/dist/js/tableexport.js"></script>
 <script src="./node_modules/notie/dist/notie.js"></script>
+<script src="./node_modules/angularjs-dropdown-multiselect/dist/angularjs-dropdown-multiselect.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.js"></script>
+<script src="./node_modules/angular-moment-picker/dist/angular-moment-picker.js"></script>
 <!--<script src="./node_modules/angularjs-datetime-picker/angularjs-datetime-picker.js"></script>-->
 <!--<script src="./node_modules/angularjs-datepicker/dist/angular-datepicker.min.js"></script>-->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>-->
@@ -119,4 +257,5 @@
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.debug.js"></script>-->
 <!--<script src="./node_modules/angular-save-html-to-pdf/dist/saveHtmlToPdf.min.js"></script>-->
 </body>
+
 </html>

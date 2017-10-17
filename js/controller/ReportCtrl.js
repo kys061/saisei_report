@@ -1,28 +1,44 @@
 'use strict';
 
-reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log, ReportData, SharedData, UserAppData, $location, $route, $window) {
+reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log, ReportData, SharedData, UserAppData, $location, $route, $window, cfpLoadingBar) {
 
-    $scope.$on('$routeChangeStart', function (scope, next, current) {
+    $scope.$on('$routeChangeStart', function(scope, next, current) {
         SharedData.setCurrentState(true);
         console.log("change back");
         $location.path('/');
-        $window.location.href='/saisei_report/';
-        // if (next.$$route.controller != "Your Controller Name") {
-        //     // Show here for your model, and do what you need**
-        // }
+        $window.location.href = '/saisei_report/';
     });
+    $scope.complete_count = 0;
+    $scope.complete_check_count = 13; // 나중에 계산 수식 필요~!!
+    $rootScope.$on('cfpLoadingBar:loaded', function() {
+        $scope.complete_count += 1;
+        console.log("complete_count : " + $scope.complete_count);
+    });
+
+    $rootScope.$on('cfpLoadingBar:completed', function() {
+        if ($scope.complete_count === $scope.complete_check_count) {
+            notie.alert({
+                type: 'info',
+                stay: 'true',
+                time: 30,
+                text: 'SAISEI 트래픽 보고서가 완성 되었습니다!!!'
+            });
+        }
+    });
+
     var from = SharedData.getFrom();
     var until = SharedData.getUntil();
+    console.log(from + " - " + until);
     //get div size init
     var size = {};
     size.first_page = {};
     size.second_page = {};
     size.third_page = {};
     // set date
-    ReportData.setFrom(from);
-    ReportData.setUntil(until);
-    UserAppData.setFrom(from);
-    UserAppData.setUntil(until);
+    // ReportData.setFrom(from);
+    // ReportData.setUntil(until);
+    // UserAppData.setFrom(from);
+    // UserAppData.setUntil(until);
     var _from = new Date(from);
     var _until = new Date(until);
     // set local date(kr)
@@ -82,19 +98,22 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
     $scope._users_app_option = [];
 
     var duration = $window.Sugar.Date.range(from, until).every('days').length;
-    $scope.back = function () {
+    $scope.back = function() {
         $window.location.reload();
     };
-    $scope.export_xls = function(){
+    $scope.export_xls = function() {
         var data1 = alasql('SELECT * FROM HTML("#table1",{headers:true})');
         var data2 = alasql('SELECT * FROM HTML("#table2",{headers:true})');
-    var data3 = alasql('SELECT * FROM HTML("#table3",{headers:true})');
+        var data3 = alasql('SELECT * FROM HTML("#table3",{headers:true})');
 
-    alasql('SELECT * INTO CSV("interface.csv",{headers:true, separator:","}) FROM ?', [data1]);
-    alasql('SELECT * INTO CSV("user_traffic.csv",{headers:true, separator:","}) FROM ?', [data2]);
-    alasql('SELECT * INTO CSV("user_app_traffic.csv",{headers:true, separator:","}) FROM ?', [data3]);
+        alasql('SELECT * INTO CSV("interface.csv",{headers:true, separator:","}) FROM ?', [data1]);
+        alasql('SELECT * INTO CSV("user_traffic.csv",{headers:true, separator:","}) FROM ?', [data2]);
+        alasql('SELECT * INTO CSV("user_app_traffic.csv",{headers:true, separator:","}) FROM ?', [data3]);
 
-    notie.alert({ type: 'error', text: 'csv파일이 생성되었습니다!' });
+        notie.alert({
+            type: 'error',
+            text: 'csv파일이 생성되었습니다!'
+        });
 
 
     };
@@ -102,20 +121,20 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
 
     $scope.export = function() {
         html2canvas(document.getElementById('first_page'), {
-            onrendered: function (canvas) {
+            onrendered: function(canvas) {
                 // document.body.appendChild(canvas);
                 $scope.first_page = canvas.toDataURL();
             }
             // width: 1200
         });
         html2canvas(document.getElementById('second_page'), {
-            onrendered: function (canvas) {
+            onrendered: function(canvas) {
                 // document.body.appendChild(canvas);
                 $scope.second_page = canvas.toDataURL();
             }
         });
         html2canvas(document.getElementById('third_page'), {
-            onrendered: function (canvas){
+            onrendered: function(canvas) {
                 $scope.third_page = canvas.toDataURL();
                 size.first_page.width = $('#first_page').width();
                 size.first_page.height = $('#first_page').height();
@@ -124,25 +143,24 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                 size.third_page.width = $('#third_page').width();
                 size.third_page.height = $('#third_page').height();
 
-                console.log(size.first_page.width+" : "+size.first_page.height+" : "+size.second_page.height+" : "+size.second_page.height);
+                console.log(size.first_page.width + " : " + size.first_page.height + " : " + size.second_page.height + " : " + size.second_page.height);
                 // formular : (original height / original width) x new_width = new_height
                 if (duration >= 20) {
-                   var ratio = 3;
-                } else if ( 10 < duration && duration < 20) {
-                   var ratio = 2.6;
+                    var ratio = 3;
+                } else if (10 < duration && duration < 20) {
+                    var ratio = 2.6;
                 } else {
-                   var ratio = 2.2;
+                    var ratio = 2.2;
                 }
                 $scope.docConfig = {
-                    content: [
-                        {
-                            image: $scope.first_page,
-                            width: Math.ceil(size.first_page.width / ratio),
-                            height: Math.ceil((size.first_page.height / size.first_page.width) * Math.ceil(size.first_page.width / ratio)),
-                            // margin: [left, top, right, bottom]
-                            margin: [0, 0, 0, 0],
-                            pageBreak: 'after'
-                        },
+                    content: [{
+                        image: $scope.first_page,
+                        width: Math.ceil(size.first_page.width / ratio),
+                        height: Math.ceil((size.first_page.height / size.first_page.width) * Math.ceil(size.first_page.width / ratio)),
+                        // margin: [left, top, right, bottom]
+                        margin: [0, 0, 0, 0],
+                        pageBreak: 'after'
+                    },
                         {
                             image: $scope.second_page,
                             width: Math.ceil(size.second_page.width / ratio),
@@ -159,10 +177,13 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                     ]
                 };
                 console.log("ratio : " + ratio);
-                pdfMake.createPdf($scope.docConfig).download("test.pdf",function() {
+                pdfMake.createPdf($scope.docConfig).download("test.pdf", function() {
                     // alert('pdf 다운로드가 완료 되었습니다!');
                     // notie.confirm({ text: 'pdf를 다운 받으시겠습니까?' }, function() {
-                        notie.alert({ type: 'error', text: 'pdf 다운로드가 완료 되었습니다!!' });
+                    notie.alert({
+                        type: 'error',
+                        text: 'pdf 다운로드가 완료 되었습니다!!'
+                    });
                     // });
 
                 });
@@ -170,7 +191,7 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
         });
     };
 
-    ReportData.getIntRcvData(function(data){
+    ReportData.getIntRcvData(function(data) {
         /**********************************/
         /* RCV DATA OF INTERFACE          */
         /**********************************/
@@ -190,7 +211,7 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
         /**********************************/
         /* make date array for compare date
         /**********************************/
-        for (var j = 0; j < duration-1; j++) {
+        for (var j = 0; j < duration - 1; j++) {
             $scope.int_date.push(from_date.addDays(1).format("%F").raw);
             $scope.int_cmp_date.push(_from_date.addDays(1).format("%m-%d"));
         }
@@ -199,11 +220,11 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
            2. data_rcv_rate : interface rcv,
         */
 
-        for(var i = 0; i < $scope._history_length_rcv_rate; i++){
+        for (var i = 0; i < $scope._history_length_rcv_rate; i++) {
             if (i % 100 === 0) {
                 $scope.t = new Date($scope._history_rcv[i][0]);
                 $scope.label.push($scope.t.toLocaleString());
-                $scope.data_rcv_rate.push(Math.round($scope._history_rcv[i][1]*0.001));
+                $scope.data_rcv_rate.push(Math.round($scope._history_rcv[i][1] * 0.001));
             }
             // $scope.raw_label.push($scope._history_rcv[i][0]);
             // $scope.raw_data_rcv_rate.push($scope._history_rcv[i][1]);
@@ -231,7 +252,7 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
             $scope.int_rcv_avg.push($scope.rcv_tot[j] / $scope.rcv_len[j]);
         }
 
-        ReportData.getIntTrsData(function(data){
+        ReportData.getIntTrsData(function(data) {
             /**********************************/
             /* TRS DATA OF INTERFACE          */
             /**********************************/
@@ -240,9 +261,9 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
             /* make trs rate
                1. data_trs_rate : total rate for trs interface
             */
-            for(var i = 0; i < $scope._history_length_trs_rate; i++){
+            for (var i = 0; i < $scope._history_length_trs_rate; i++) {
                 if (i % 100 === 0) {
-                    $scope.data_trs_rate.push(Math.round($scope._history_trs[i][1]*0.001));
+                    $scope.data_trs_rate.push(Math.round($scope._history_trs[i][1] * 0.001));
                 }
                 // $scope.raw_data_trs_rate.push($scope._history_trs[i][1]);
             }
@@ -271,11 +292,11 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
             /* make all data for interface to use table
                1. int_data : date, rcv, trs
             */
-            for (var k = 0; k < $scope.int_date.length; k++){
+            for (var k = 0; k < $scope.int_date.length; k++) {
                 $scope.int_data.push({
-                    date : $scope.int_date[k],
-                    rcv_avg : Math.round($scope.int_rcv_avg[k]*0.001),
-                    trs_avg : Math.round($scope.int_trs_avg[k]*0.001)
+                    date: $scope.int_date[k],
+                    rcv_avg: Math.round($scope.int_rcv_avg[k] * 0.001),
+                    trs_avg: Math.round($scope.int_trs_avg[k] * 0.001)
                 });
             }
             // interface rate for graph
@@ -290,23 +311,25 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
             // set options for grp
             $scope.options = {
                 scales: {
-                    yAxes: [
-                        {
-                            id: 'y-axis-1',
-                            type: 'linear',
+                    yAxes: [{
+                        id: 'y-axis-1',
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        scaleLabel: {
                             display: true,
-                            position: 'left',
-                            scaleLabel: {
-                                display: true,
-                                fontSize: 14,
-                                labelString: '수신(Mbit/s)'
-                            },
-                            ticks: {
-                                max: Math.ceil($scope.int_max*0.001)*1000,
-                                min: 0,
-                                beginAtZero: true
-                            }
+                            fontSize: 14,
+                            labelString: '수신(Mbit/s)',
+                            fontStyle: "bold"
                         },
+                        ticks: {
+                            max: Math.ceil($scope.int_max * 0.001) * 1000,
+                            min: 0,
+                            beginAtZero: true,
+                            fontSize: 12,
+                            fontStyle: "bold"
+                        }
+                    },
                         {
                             id: 'y-axis-2',
                             type: 'linear',
@@ -315,19 +338,34 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                             scaleLabel: {
                                 display: true,
                                 fontSize: 14,
-                                labelString: '송신(Mbit/s)'
+                                labelString: '송신(Mbit/s)',
+                                fontStyle: "bold"
                             },
                             ticks: {
-                                max: Math.ceil($scope.int_max*0.001)*1000,
+                                max: Math.ceil($scope.int_max * 0.001) * 1000,
                                 min: 0,
-                                beginAtZero: true
+                                beginAtZero: true,
+                                fontSize: 12,
+                                fontStyle: "bold"
                             }
                         }
-                    ]
+                    ],
+                    xAxes: [{
+                        ticks: {
+                            fontSize: 12,
+                            fontStyle: "bold"
+                        },
+                        scaleLabel: {
+                            display: true,
+                            fontSize: 14,
+                            labelString: '시간',
+                            fontStyle: "bold"
+                        }
+                    }]
                 }
             };
 
-            ReportData.getUserdata(function(data) {
+            ReportData.getUserData(function(data) {
                 /**********************************/
                 /* USER TOTAL RATE OF INTERFACE          */
                 /**********************************/
@@ -347,43 +385,49 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                 for (var i = 0; i < _users.length; i++) {
                     $scope._users_label.push(_users[i]['name']);
                     var user_from = new Date(_users[i]['from']);
-                    user_from.setHours(user_from.getHours()+9);
+                    user_from.setHours(user_from.getHours() + 9);
                     $scope._users_from.push(user_from.toLocaleString());
                     var user_until = new Date(_users[i]['until']);
-                    $scope._users_until.push(user_until.setHours(user_until.getHours()+9));
-                    $scope._users_total.push(Math.round(_users[i]['total_rate']*0.001));
-                    $scope._users_download.push(Math.round(_users[i]['dest_smoothed_rate']*0.001));
-                    $scope._users_upload.push(Math.round(_users[i]['source_smoothed_rate']*0.001));
+                    $scope._users_until.push(user_until.setHours(user_until.getHours() + 9));
+                    $scope._users_total.push(Math.round(_users[i]['total_rate'] * 0.001));
+                    $scope._users_download.push(Math.round(_users[i]['dest_smoothed_rate'] * 0.001));
+                    $scope._users_upload.push(Math.round(_users[i]['source_smoothed_rate'] * 0.001));
                     $scope._users_tb_data.push({
-                        name : _users[i]['name'],
-                        from : user_from.toLocaleString(),
-                        until : user_until.toLocaleString(),
-                        total : Math.round(_users[i]['total_rate']*0.001),
-                        down : Math.round(_users[i]['dest_smoothed_rate']*0.001),
-                        up : Math.round(_users[i]['source_smoothed_rate']*0.001)
+                        name: _users[i]['name'],
+                        from: user_from.toLocaleString(),
+                        until: user_until.toLocaleString(),
+                        total: Math.round(_users[i]['total_rate'] * 0.001),
+                        down: Math.round(_users[i]['dest_smoothed_rate'] * 0.001),
+                        up: Math.round(_users[i]['source_smoothed_rate'] * 0.001)
                     });
                 }
                 $scope._users_data = [$scope._users_total, $scope._users_download, $scope._users_upload];
                 $scope._users_option = {
                     scales: {
-                        yAxes: [
-                            {
-                                scaleLabel: {
-                                    display: true,
-                                    fontSize: 14,
-                                    labelString: '내부사용자'
-                                }
+                        yAxes: [{
+                            ticks: {
+                                fontSize: 12,
+                                fontStyle: "bold"
+                            },
+                            scaleLabel: {
+                                display: true,
+                                fontSize: 14,
+                                labelString: '내부사용자',
+                                fontStyle: "bold"
                             }
-                        ],
-                        xAxes: [
-                            {
-                                scaleLabel: {
-                                    display: true,
-                                    fontSize: 14,
-                                    labelString: '사용량(Mbit/s)'
-                                }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 12,
+                                fontStyle: "bold"
+                            },
+                            scaleLabel: {
+                                display: true,
+                                fontSize: 14,
+                                labelString: '사용량(Mbit/s)',
+                                fontStyle: "bold"
                             }
-                        ]
+                        }]
                     }
                 };
 
@@ -391,7 +435,7 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                     /**********************************/
                     /* USER-APP DATA                  */
                     /**********************************/
-                    UserAppData.getUserAppData($scope._users_label[i]).then(function(data){
+                    UserAppData.getUserAppData($scope._users_label[i]).then(function(data) {
                         /*
                             1. top1_from, top1_until
                             2. top2_from, top2_until
@@ -403,17 +447,17 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                             8. _users_app_option : options for graph
                         */
                         var top1_from = new Date(data['data']['collection'][0]['from']);
-                        top1_from.setHours(top1_from.getHours()+9);
+                        top1_from.setHours(top1_from.getHours() + 9);
                         var top1_until = new Date(data['data']['collection'][0]['until']);
-                        top1_until.setHours(top1_until.getHours()+9);
+                        top1_until.setHours(top1_until.getHours() + 9);
                         var top2_from = new Date(data['data']['collection'][1]['from']);
-                        top2_from.setHours(top2_from.getHours()+9);
+                        top2_from.setHours(top2_from.getHours() + 9);
                         var top2_until = new Date(data['data']['collection'][1]['until']);
-                        top2_until.setHours(top2_until.getHours()+9);
+                        top2_until.setHours(top2_until.getHours() + 9);
                         var top3_from = new Date(data['data']['collection'][2]['from']);
-                        top3_from.setHours(top3_from.getHours()+9);
+                        top3_from.setHours(top3_from.getHours() + 9);
                         var top3_until = new Date(data['data']['collection'][2]['until']);
-                        top3_until.setHours(top3_until.getHours()+9);
+                        top3_until.setHours(top3_until.getHours() + 9);
                         // console.log(data['data']['collection'][0].link.href.split('/')[6]);
                         $scope._users_app.push({
                             "user_name": data['data']['collection'][0].link.href.split('/')[6],
@@ -440,40 +484,47 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
                         $scope._users_appName_top2.push(data['data']['collection'][1]['name']);
                         $scope._users_appName_top3.push(data['data']['collection'][2]['name']);
                         // $rootScope._users_app_top1 = $scope._users_app_top1;
-                        $scope._users_app_label.push(data['data']['collection'][0].link.href.split('/')[6]+"("
-                            +"1."+ data['data']['collection'][0]['name']+","
-                            +"2."+ data['data']['collection'][1]['name']+","
-                            +"3."+ data['data']['collection'][2]['name']+")"
+                        $scope._users_app_label.push(data['data']['collection'][0].link.href.split('/')[6] + "(" +
+                            "1." + data['data']['collection'][0]['name'] + "," +
+                            "2." + data['data']['collection'][1]['name'] + "," +
+                            "3." + data['data']['collection'][2]['name'] + ")"
                         );
 
-                    })
+                    });
+                    console.log("status : " + cfpLoadingBar.status());
                 }
                 $scope._users_app_data = [
                     $scope._users_app_top1,
                     $scope._users_app_top2,
                     $scope._users_app_top3
                 ];
-                $scope._users_app_series= ["TOP APP 1", "TOP APP 2", "TOP APP 3"];
+                $scope._users_app_series = ["TOP APP 1", "TOP APP 2", "TOP APP 3"];
                 $scope._users_app_option = {
                     scales: {
-                        xAxes: [
-                            {
-                                scaleLabel: {
-                                    display: true,
-                                    fontSize: 14,
-                                    labelString: 'APP 사용량(Mbit/s)'
-                                }
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 12,
+                                fontStyle: "bold"
+                            },
+                            scaleLabel: {
+                                display: true,
+                                fontSize: 14,
+                                labelString: 'APP 사용량(Mbit/s)',
+                                fontStyle: "bold"
                             }
-                        ],
-                        yAxes: [
-                            {
-                                scaleLabel: {
-                                    display: true,
-                                    fontSize: 14,
-                                    labelString: '사용자 어플리케이션(Top1,Top2,Top3)'
-                                }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                fontSize: 12,
+                                fontStyle: "bold"
+                            },
+                            scaleLabel: {
+                                display: true,
+                                fontSize: 14,
+                                labelString: '사용자 어플리케이션(Top1,Top2,Top3)',
+                                fontStyle: "bold"
                             }
-                        ]
+                        }]
                     }
                 };
             });
@@ -482,6 +533,10 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
         $scope.labels = $scope.label;
         $scope.series = ['수신(단위:Mbit/s)', '송신(단위:Mbit/s)'];
         $scope.colors = ['#ff6384', '#45b7cd', '#ffe200'];
-        $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
+        $scope.datasetOverride = [{
+            yAxisID: 'y-axis-1'
+        }, {
+            yAxisID: 'y-axis-2'
+        }];
     });
 });
