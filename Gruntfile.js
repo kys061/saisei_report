@@ -24,7 +24,7 @@ module.exports = function(grunt) {
                 options: {
                     install: true,
                     copy: true,
-                    targetDir: 'lib/',
+                    targetDir: 'libs/',
                     cleanTargetDir: false
                 }
             }
