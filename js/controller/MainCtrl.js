@@ -1,5 +1,3 @@
-'use strict';
-
 reportApp.controller('MainCtrl', function MainCtrl($scope, $log, $route, $templateCache, $location, $window, SharedData) {
     var from;
     var until;
