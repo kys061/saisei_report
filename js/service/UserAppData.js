@@ -1,8 +1,24 @@
 reportApp.factory('UserAppData', function($http, $log, $base64, $window, ReportConfig, ReportFrom, ReportUntil, ReportUrl, ReportQstring, ReportAuth, SharedData) {
     var from = SharedData.getFrom();
     var until = SharedData.getUntil();
-    var config = {};
-    config = new ReportConfig().getConfig();
+    // open sync
+    $.ajaxSetup({
+        async: false
+    });
+    // get config
+    var result;
+    var config = (function() {
+        // var result;
+        $.getJSON("./config/report-config.json", function(d) {
+            console.log(d);
+            result = d.config;
+        });
+        return result;
+    })();
+    // close sync
+    $.ajaxSetup({
+        async: true
+    });
 
     function getUserAppData(userid) {
         var rest_from = new ReportFrom("")

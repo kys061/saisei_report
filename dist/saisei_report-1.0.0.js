@@ -1,3 +1,107 @@
+/*! saisei_report - v1.0.0 - 2017-10-17 */ 
+'use strict';
+
+var reportApp = angular.module('reportApp', [
+    "ngRoute", 'base64', 'chart.js', 'angular-momentjs', 'angular-loading-bar',
+    'angularjs-datetime-picker', 'angularjs-dropdown-multiselect'
+])
+    .config(function($routeProvider, $locationProvider, $momentProvider) {
+        $momentProvider
+            .asyncLoading(false)
+            .scriptUrl('./lib/moment.min.js');
+        $routeProvider
+            // .when('/', {
+            //     templateUrl: "index.html",
+            //     controller: "MainCtrl"
+            // })
+            .when('/report', {
+                templateUrl: "templates/report.html",
+                controller: "ReportCtrl"
+            })
+            .otherwise({
+                redirectTo: '/'
+            });
+        $locationProvider.html5Mode(true);
+    })
+    .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+        cfpLoadingBarProvider.latencyThreshold = 1200;
+        cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+        cfpLoadingBarProvider.spinnerTemplate = '<div id="loading-bar-spinner"><div class="spinner-icon"></div></div>';
+    }]).run(function($rootScope) {
+        $rootScope.users_app_top1 = [];
+    });
+reportApp.controller('MainCtrl', function MainCtrl($scope, $log, $route, $templateCache, $location, $window, SharedData) {
+    var from;
+    var until;
+    var today = new $window.Sugar.Date(new Date());
+    $scope.select2model = [];
+    $scope.select2data = [
+        {
+            id: 1,
+            label: "인터페이스 트래픽"
+        },
+        {
+            id: 2,
+            label: "사용자 트래픽"
+        },
+        {
+            id: 3,
+            label: "사용자-어플리케이션 트래픽"
+        }
+    ];
+    $scope.select2settings = {};
+    // $scope.currentState = SharedData.getCurrentState();
+    $scope.currentState = true;
+    $scope.currentDurationState = SharedData.currentDurationState;
+    $scope.$watch('date_from', function(val) {
+        from = val;
+        console.log(val);
+        // $scope.from = new Date(val);
+    });
+    $scope.$watch('date_until', function(val) {
+        until = val;
+        console.log(val);
+        // $scope.until = new Date(val);
+    });
+
+    $scope.sendDate = function() {
+        var duration = $window.Sugar.Date.range(from, until).every('days').length;
+        console.log(duration);
+        var _until = new $window.Sugar.Date(until);
+        var _from = new $window.Sugar.Date(from);
+        console.log("from : until -> " + _from.raw + ':' + _until.raw);
+        if (from === undefined || until === undefined) {
+            notie.alert({
+                type: 'error',
+                text: '리포트 기간을 넣어주세요!!!'
+            })
+        } else if (duration > 31) {
+            notie.alert({
+                type: 'error',
+                text: '리포트 기간은 최대 한달까지 가능합니다!!'
+            })
+        } else if (_until.isFuture().raw) {
+            notie.alert({
+                type: 'error',
+                text: '리포트 종료 시점은 현재보다 미래로 설정할 수 없습니다!!'
+            })
+        } else if (_from.isFuture().raw) {
+            notie.alert({
+                type: 'error',
+                text: '리포트 시작 시점은 현재보다 미래로 설정할 수 없습니다!!'
+            })
+        } else {
+            $scope.currentState = false;
+            $scope.currentDurationState = false;
+            SharedData.setFrom(from);
+            SharedData.setUntil(until);
+            $location.path('/report');
+        }
+        // var currentPageTemplate = $route.current.templateUrl;
+        // $templateCache.remove(currentPageTemplate);
+        // $route.reload();
+    };
+});
 reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log, ReportData, SharedData, UserAppData, $location, $route, $window, cfpLoadingBar) {
     $scope.$on('$routeChangeStart', function(scope, next, current) {
         SharedData.setCurrentState(true);
@@ -536,4 +640,390 @@ reportApp.controller('ReportCtrl', function ReportCtrl($rootScope, $scope, $log,
             yAxisID: 'y-axis-2'
         }];
     });
+});
+reportApp.service('ReportAuth', function($base64) {
+    var Auth = function (start) {
+        var self = this;
+        this.addId = function(id){
+            start = start + id;
+            return self;
+        };
+        this.addPasswd = function(pass){
+            start = start + ":" + pass;
+            return self;
+        };
+        this.getAuth = function(){
+            return {
+                "Authorization": "Basic " + $base64.encode(start)
+            };
+        };
+    };
+    return Auth;
+});
+reportApp.service('ReportConfig', function() {
+    var Config = function() {
+        var self = this;
+        var result
+        this.getConfig = function() {
+            $.getJSON("./config/report-config.json", function (d) {
+                result = d.config;
+            });
+            return result;
+        };
+    };
+
+    return Config;
+});
+reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFrom, ReportUntil, ReportUrl, ReportQstring, ReportAuth, SharedData) {
+    var from = SharedData.getFrom();
+    var until = SharedData.getUntil();
+    // open sync
+    $.ajaxSetup({
+        async: false
+    });
+    // get config
+    var result;
+    var config = (function() {
+        // var result;
+        $.getJSON("./config/report-config.json", function(d) {
+            console.log(d);
+            result = d.config;
+        });
+        return result;
+    })();
+    // close sync
+    $.ajaxSetup({
+        async: true
+    });
+    // set date and headers
+    var rest_from = new ReportFrom("")
+        .setFrom(from)
+        .getFrom();
+    var rest_until = new ReportUntil("")
+        .setUntil(until)
+        .getUntil();
+    var headers = new ReportAuth("")
+        .addId(config.common.id)
+        .addPasswd(config.common.passwd)
+        .getAuth();
+    /*
+     *   get user's total rate
+     */
+    function getUserData(successcb) {
+        // set urls
+        var rest_qstring = new ReportQstring("")
+            .addSelect('?select='+config.users_tr.attr)
+            .addOrder('&order='+config.users_tr.order)
+            .addLimit('&limit='+config.users_tr.limit)
+            .addWith('&with='+config.users_tr.with)
+            .addFrom('&from='+rest_from)
+            .addUntil('&until='+rest_until)
+            .getQstring();
+        var rest_url = new ReportUrl("")
+            .addDefault(config.common.ip, config.common.port, config.common.path)
+            .addSection(config.users_tr.section)
+            .addQstring(rest_qstring)
+            .getUrls();
+
+        $http({
+            method: 'GET',
+            url: rest_url,
+            headers: headers
+        }).
+        then(function(data, status, headers, config) {
+                successcb(data);
+            },
+            function onError(response) {
+                if (response.status < 0) {
+                    notie.alert({
+                        type: 'error',
+                        stay: 'true',
+                        time: 3600,
+                        text: 'ERROR - 유저 데이터가 존재하지 않습니다.'
+                    });
+                }
+            })
+    }
+    /*
+     *   get interface rcv rate
+     */
+    function getIntRcvData(successcb) {
+        // set urls
+        var rest_qstring = new ReportQstring("")
+            .addSelect('?select='+config.interface_rcv.attr)
+            .addFrom('&from='+rest_from)
+            .addOrder('&operation='+config.interface_rcv.operation)
+            .addLimit('&history_points='+config.interface_rcv.hist_point)
+            .addUntil('&until='+rest_until)
+            .getQstring();
+        var rest_url = new ReportUrl("")
+            .addDefault(config.common.ip, config.common.port, config.common.path)
+            .addSection(config.interface_rcv.section)
+            .addQstring(rest_qstring)
+            .getUrls();
+
+        $http({
+            method: 'GET',
+            url: rest_url,
+            headers: headers
+        }).
+        then(function(data, status, headers, config) {
+                successcb(data);
+            },
+            function onError(response) {
+                console.log(response);
+                if (response.status < 0) {
+                    notie.alert({
+                        type: 'error',
+                        stay: 'true',
+                        time: 3600,
+                        text: 'ERROR - 인터페이스 데이터가 존재하지 않습니다.'
+                    });
+                    //alert("ERROR! - 데이터가 존재하지 않습니다.");
+                }
+            })
+    }
+    /*
+     *   get interface trs rate
+     */
+    function getIntTrsData(successcb) {
+        // set urls
+        var rest_qstring = new ReportQstring("")
+            .addSelect('?select='+config.interface_trs.attr)
+            .addFrom('&from='+rest_from)
+            .addOrder('&operation='+config.interface_trs.operation)
+            .addLimit('&history_points='+config.interface_trs.hist_point)
+            .addUntil('&until='+rest_until)
+            .getQstring();
+        var rest_url = new ReportUrl("")
+            .addDefault(config.common.ip, config.common.port, config.common.path)
+            .addSection(config.interface_trs.section)
+            .addQstring(rest_qstring)
+            .getUrls();
+        console.log(rest_url);
+        $http({
+            method: 'GET',
+            url: rest_url,
+            headers: headers
+        }).
+        then(function(data, status, headers, config) {
+                successcb(data);
+                $log.info(data['data']['collection'][0]['_history_length_receive_rate']);
+                $log.info(data['data']['collection'][0]['_history_receive_rate']);
+            },
+            function onError(response) {
+                if (response.status < 0) {
+                    notie.alert({
+                        type: 'error',
+                        stay: 'true',
+                        time: 3600,
+                        text: 'ERROR - 인터페이스 데이터가 존재하지 않습니다.'
+                    });
+                }
+            })
+    }
+    return {
+        getUserData: getUserData,
+        getIntRcvData: getIntRcvData,
+        getIntTrsData: getIntTrsData
+    };
+});
+reportApp.service('ReportFrom', function() {
+    var From = function (start) {
+        var self = this;
+        this.setFrom = function(_from){
+            var from = new Date(_from);
+            var _from_yy = moment(from.toUTCString()).utc().format('YYYY');
+            var _from_mm = moment(from.toUTCString()).utc().format('MM');
+            var _from_dd = moment(from.toUTCString()).utc().format('DD');
+            var _from_hh = moment(from.toUTCString()).utc().format('HH');
+            var _from_min = moment(from.toUTCString()).utc().format('mm');
+            var _from_sec = moment(from.toUTCString()).utc().format('ss');
+            start = start+_from_hh+":"+_from_min+":"+_from_sec+"_"+_from_yy+_from_mm+_from_dd;
+            return self;
+        };
+        this.getFrom = function(){
+            return start;
+        };
+    };
+    return From;
+});
+reportApp.service('ReportQstring', function() {
+    var Qstring = function (start) {
+        var self = this;
+        this.addSelect = function(attr){
+            start = start + attr;
+            return self;
+        };
+        this.addOrder = function(order){
+            start = start + order;
+            return self;
+        };
+        this.addLimit = function(limit){
+            start = start + limit;
+            return self;
+        };
+        this.addWith = function(_with){
+            start = start + _with;
+            return self;
+        };
+        this.addFrom = function(from){
+            start = start + from;
+            return self;
+        };
+        this.addUntil = function(until){
+            start = start + until;
+            return self;
+        };
+        this.getQstring = function(){
+            return start;
+        };
+    };
+
+    return Qstring;
+});
+reportApp.service('ReportUntil', function() {
+    var Until = function (start) {
+        var self = this;
+        this.setUntil = function(_until){
+            var until = new Date(_until);
+            var _until_yy = moment(until.toUTCString()).utc().format('YYYY');
+            var _until_mm = moment(until.toUTCString()).utc().format('MM');
+            var _until_dd = moment(until.toUTCString()).utc().format('DD');
+            var _until_hh = moment(until.toUTCString()).utc().format('HH');
+            var _until_min = moment(until.toUTCString()).utc().format('mm');
+            var _until_sec = moment(until.toUTCString()).utc().format('ss');
+            start = start+_until_hh+":"+_until_min+":"+_until_sec+"_"+_until_yy+_until_mm+_until_dd;
+            return self;
+        };
+        this.getUntil = function(){
+            return start;
+        };
+    };
+    return Until;
+});
+reportApp.service('ReportUrl', function() {
+    var Urls = function (start) {
+        var self = this;
+        this.addDefault = function(ip, port, path){
+            start = start + ip + port + path;
+            return self;
+        };
+        this.addSection = function(section){
+            start = start + section;
+            return self;
+        };
+        this.addQstring = function(qstring){
+            start = start + qstring;
+            return self;
+        };
+        this.getUrls = function(){
+            // callback(start);
+            return start;
+        };
+    };
+
+    return Urls;
+});
+reportApp.service('SharedData', function() {
+    var sharedData = {};
+    sharedData.currentDurationState = true;
+    sharedData.currentBtnState = false;
+    sharedData.currentState = true;
+    sharedData.from;
+    sharedData.until;
+    return {
+        setCurrentState: function(arg) {
+            sharedData.currentState = arg;
+        },
+        getCurrentState: function() {
+            return sharedData.currentState;
+        },
+        getSharedData: function() {
+            return sharedData;
+        },
+        setFrom: function(from) {
+            sharedData.from = from;
+        },
+        setUntil: function(until) {
+            sharedData.until = until;
+        },
+        getFrom: function() {
+            return sharedData.from;
+        },
+        getUntil: function() {
+            return sharedData.until;
+        }
+    };
+});
+reportApp.factory('UserAppData', function($http, $log, $base64, $window, ReportConfig, ReportFrom, ReportUntil, ReportUrl, ReportQstring, ReportAuth, SharedData) {
+    var from = SharedData.getFrom();
+    var until = SharedData.getUntil();
+    // open sync
+    $.ajaxSetup({
+        async: false
+    });
+    // get config
+    var result;
+    var config = (function() {
+        // var result;
+        $.getJSON("./config/report-config.json", function(d) {
+            console.log(d);
+            result = d.config;
+        });
+        return result;
+    })();
+    // close sync
+    $.ajaxSetup({
+        async: true
+    });
+
+    function getUserAppData(userid) {
+        var rest_from = new ReportFrom("")
+            .setFrom(from)
+            .getFrom();
+        var rest_until = new ReportUntil("")
+            .setUntil(until)
+            .getUntil();
+        var rest_qstring = new ReportQstring("")
+            .addSelect('?select='+config.user_app.attr)
+            .addOrder('&order='+config.user_app.order)
+            .addLimit('&limit='+config.user_app.limit)
+            .addWith('&with='+config.user_app.with)
+            .addFrom('&from='+rest_from)
+            .addUntil('&until='+rest_until)
+            .getQstring();
+        var rest_url = new ReportUrl("")
+            .addDefault(config.common.ip, config.common.port, config.common.path)
+            .addSection(config.user_app.section.replace(':userID', userid))
+            .addQstring(rest_qstring)
+            .getUrls();
+        var headers = new ReportAuth("")
+            .addId(config.common.id)
+            .addPasswd(config.common.passwd)
+            .getAuth();
+
+        return $http({
+            method: 'GET',
+            url: rest_url,
+            headers: headers
+        }).
+        then(function(data, status, headers, config) {
+                return data;
+            },
+            function onError(response) {
+                if (response.status < 0) {
+                    notie.alert({
+                        type: 'error',
+                        stay: 'true',
+                        time: 3600,
+                        text: 'ERROR - 유저 데이터가 존재하지 않습니다.'
+                    });
+                }
+            })
+    }
+
+    return {
+        getUserAppData: getUserAppData
+    };
 });

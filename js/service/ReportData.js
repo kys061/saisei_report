@@ -6,6 +6,7 @@ reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFr
         async: false
     });
     // get config
+    var result;
     var config = (function() {
         // var result;
         $.getJSON("./config/report-config.json", function(d) {
