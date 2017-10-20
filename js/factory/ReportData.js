@@ -33,7 +33,7 @@ reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFr
     /*
      *   get user's total rate
      */
-    function getUserData(successcb) {
+    function getUserData() {
         // set urls
         var rest_qstring = new ReportQstring("")
             .addSelect('?select='+config.users_tr.attr)
@@ -49,13 +49,14 @@ reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFr
             .addQstring(rest_qstring)
             .getUrls();
 
-        $http({
+        return $http({
             method: 'GET',
             url: rest_url,
             headers: headers
         }).
         then(function(data, status, headers, config) {
-                successcb(data);
+                return data;
+                // successcb(data);
             },
             function onError(response) {
                 if (response.status < 0) {
@@ -71,7 +72,7 @@ reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFr
     /*
      *   get interface rcv rate
      */
-    function getIntRcvData(successcb) {
+    function getIntRcvData() {
         // set urls
         var rest_qstring = new ReportQstring("")
             .addSelect('?select='+config.interface_rcv.attr)
@@ -86,13 +87,14 @@ reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFr
             .addQstring(rest_qstring)
             .getUrls();
 
-        $http({
+        return $http({
             method: 'GET',
             url: rest_url,
             headers: headers
         }).
         then(function(data, status, headers, config) {
-                successcb(data);
+                // successcb(data);
+                return data;
             },
             function onError(response) {
                 console.log(response);
@@ -110,7 +112,7 @@ reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFr
     /*
      *   get interface trs rate
      */
-    function getIntTrsData(successcb) {
+    function getIntTrsData() {
         // set urls
         var rest_qstring = new ReportQstring("")
             .addSelect('?select='+config.interface_trs.attr)
@@ -125,15 +127,14 @@ reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFr
             .addQstring(rest_qstring)
             .getUrls();
         console.log(rest_url);
-        $http({
+        return $http({
             method: 'GET',
             url: rest_url,
             headers: headers
         }).
         then(function(data, status, headers, config) {
-                successcb(data);
-                $log.info(data['data']['collection'][0]['_history_length_receive_rate']);
-                $log.info(data['data']['collection'][0]['_history_receive_rate']);
+                // successcb(data);
+                return data;
             },
             function onError(response) {
                 if (response.status < 0) {
