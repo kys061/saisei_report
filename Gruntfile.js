@@ -16,7 +16,7 @@ module.exports = function(grunt) {
                 options: {
                     install: true,
                     copy: true,
-                    targetDir: 'dest/libs/',
+                    targetDir: 'saisei_report/libs/',
                     cleanTargetDir: false
                 }
             },
@@ -45,12 +45,12 @@ module.exports = function(grunt) {
                 '<%= grunt.template.today("yyyy-mm-dd") %> */ \n'
             },
             dist: {
-                src: [ 'js/app.js', 'js/controller/*.js', 'js/service/*.js'],
+                src: [ 'js/app.js', 'js/controller/*.js', 'js/service/*.js', 'js/factory/*.js'],
                 // dest: 'dist/app.js'
-                dest: 'dest/js/<%= pkg.name %>-<%= pkg.version %>.js'
+                dest: 'saisei_report/js/<%= pkg.name %>-<%= pkg.version %>.js'
             },
             dev_dist: {
-                src: [ 'js/app.js', 'js/controller/*.js', 'js/service/*.js'],
+                src: [ 'js/app.js', 'js/controller/*.js', 'js/service/*.js', 'js/factory/*.js'],
                 // dest: 'dist/app.js'
                 dest: 'js/<%= pkg.name %>-<%= pkg.version %>.js'
             }
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
         uglify: {
             dist: {
                 files: {
-                    'dest/js/saisei_report-1.0.0.min.js': [ 'dest/js/<%= pkg.name %>-<%= pkg.version %>.js' ]
+                    'saisei_report/js/saisei_report-1.0.0.min.js': [ 'saisei_report/js/<%= pkg.name %>-<%= pkg.version %>.js' ]
                 },
                 options: {
                     mangle: false,
@@ -99,7 +99,7 @@ module.exports = function(grunt) {
                 expand: true,
                 cwd: './',
                 src: ['*.html', 'templates/*.html', 'config/*.json'],
-                dest: 'dest/'
+                dest: 'saisei_report/'
                 // flatten: true
                 // filter: 'isFile'
             }
@@ -111,12 +111,12 @@ module.exports = function(grunt) {
             js: {
                 files: [
                     'Gruntfile.js',
-                    'js/*.js',
-                    'js/**/*.js',
+                    'js/app.js',
+                    'js/*/*.js',
                     '*.html',
                     'templates/*.html'
                 ],
-                tasks: ['htmlhint','jshint', 'copy']
+                tasks: ['htmlhint','jshint', 'copy', 'concat']
             }
         },
         // 서버를 열어서 브라우져에서 확인합니다.
@@ -128,7 +128,7 @@ module.exports = function(grunt) {
                     livereload: 35729,
                     // keepalive: true,
                     base: './',
-                    open: 'http://<%= connect.server.options.hostname %>:<%= connect.server.options.port %>/dest/'
+                    open: 'http://<%= connect.server.options.hostname %>:<%= connect.server.options.port %>/saisei_report/'
                 }
             }
         }
