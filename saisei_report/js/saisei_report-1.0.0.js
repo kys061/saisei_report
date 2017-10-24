@@ -1,4 +1,4 @@
-/*! saisei_report - v1.0.0 - 2017-10-20 */ 
+/*! saisei_report - v1.0.0 - 2017-10-23 */ 
 'use strict';
 
 var reportApp = angular.module('reportApp', [
@@ -430,35 +430,37 @@ reportApp.controller('ReportCtrl', function ReportCtrl(
                     } else {
                         var ratio = 2.2;
                     }
-
+                    // margin: [left, top, right, bottom]
                     var mod_doc_config = {
                         header_page: {
                             image: $scope.header_page,
                             width: Math.ceil(size.header_page.width / ratio),
                             height: Math.ceil((size.header_page.height / size.header_page.width) * Math.ceil(size.header_page.width / ratio)),
-                            // margin: [left, top, right, bottom]
-                            margin: [0, 0, 0, 0]
+                            margin: [0, 0, 0, 0],
+                            style: 'defaultStyle'
                         },
                        first_page: {
-                            image: $scope.first_page,
-                            width: Math.ceil(size.first_page.width / ratio),
-                            height: Math.ceil((size.first_page.height / size.first_page.width) * Math.ceil(size.first_page.width / ratio)),
-                            // margin: [left, top, right, bottom]
-                            margin: [0, 0, 0, 0],
-                            pageBreak: 'after'
+                           image: $scope.first_page,
+                           width: Math.ceil(size.first_page.width / ratio),
+                           height: Math.ceil((size.first_page.height / size.first_page.width) * Math.ceil(size.first_page.width / ratio)),
+                           margin: [0, 0, 0, 0],
+                           style: 'defaultStyle',
+                           pageBreak: 'after'
                         },
                         second_page: {
                             image: $scope.second_page,
                             width: Math.ceil(size.second_page.width / ratio),
                             height: Math.ceil((size.second_page.height / size.second_page.width) * Math.ceil(size.second_page.width / ratio)),
                             margin: [0, 15, 0, 0],
+                            style: 'defaultStyle',
                             pageBreak: 'after'
                         },
                         third_page: {
                             image: $scope.third_page,
                             width: Math.ceil(size.third_page.width / ratio),
                             height: Math.ceil((size.third_page.height / size.third_page.width) * Math.ceil(size.third_page.width / ratio)),
-                            margin: [0, 15, 0, 0]
+                            margin: [0, 15, 0, 0],
+                            style: 'defaultStyle'
                         }
                        // last_page: {
                        //      image: $scope.last_page,
@@ -594,6 +596,7 @@ reportApp.controller('ReportCtrl', function ReportCtrl(
                 $scope.options = val.options;
                 $scope.datasetOverride = val.datasetOverride;
                 $scope.int_data = val.int_data;
+                $scope.int_name = val.int_name;
         },
         function(val){
             console.log(val);
@@ -1208,7 +1211,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                         colors: colors,
                         options: options,
                         datasetOverride: datasetOverride,
-                        int_data: int_data
+                        int_data: int_data,
+                        int_name: int_name
                     });
                 });
             });

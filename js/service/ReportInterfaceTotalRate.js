@@ -220,7 +220,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                         colors: colors,
                         options: options,
                         datasetOverride: datasetOverride,
-                        int_data: int_data
+                        int_data: int_data,
+                        int_name: int_name
                     });
                 });
             });
