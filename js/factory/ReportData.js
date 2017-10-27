@@ -1,4 +1,6 @@
-reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFrom, ReportUntil, ReportUrl, ReportQstring, ReportAuth, SharedData) {
+reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFrom, ReportUntil, ReportUrl,
+                                         ReportQstring, ReportAuth, ReportConfig, SharedData)
+{
     var from = SharedData.getFrom();
     var until = SharedData.getUntil();
     // open sync
@@ -20,16 +22,9 @@ reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFr
         async: true
     });
     // set date and headers
-    var rest_from = new ReportFrom("")
-        .setFrom(from)
-        .getFrom();
-    var rest_until = new ReportUntil("")
-        .setUntil(until)
-        .getUntil();
-    var headers = new ReportAuth("")
-        .addId(config.common.id)
-        .addPasswd(config.common.passwd)
-        .getAuth();
+    var rest_from = new ReportFrom("").setFrom(from).getFrom();
+    var rest_until = new ReportUntil("").setUntil(until).getUntil();
+    var headers = new ReportAuth("").addId(config.common.id).addPasswd(config.common.passwd).getAuth();
     /*
      *   get user's total rate
      */
