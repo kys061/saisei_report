@@ -63,10 +63,11 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                     */
 
                     for (var i = 0; i < _history_length_rcv_rate; i++) {
-                        if (i % 100 === 0) {
+                        if (i % 5 === 0) {
                             var t = new Date(_history_rcv[i][0]);
                             label.push(t.toLocaleString());
-                            data_rcv_rate.push(Math.round(_history_rcv[i][1] * 0.001));
+                            data_rcv_rate.push((_history_rcv[i][1] * 0.001).toFixed(3));
+                            // data_rcv_rate.push(Math.round(_history_rcv[i][1] * 0.001));
                         }
                         // raw_label.push(_history_rcv[i][0]);
                         // raw_data_rcv_rate.push(_history_rcv[i][1]);
@@ -82,7 +83,7 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                     for (var j = 0; j < duration; j++) {
                         for (var i = 0; i < _history_length_rcv_rate; i++) {
                             if (int_cmp_date[j].raw === moment(_history_rcv[i][0]).format('MM-DD')) {
-                                rcv_tot[j] += _history_rcv[i][1];
+                                rcv_tot[j] += _history_rcv[i][1]*0.001;
                                 rcv_len[j] += 1;
                             }
                         }
@@ -92,6 +93,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                     */
                     for (var j = 0; j < duration; j++) {
                         int_rcv_avg.push(rcv_tot[j] / rcv_len[j]);
+                        console.log("RCV");
+                        console.log(j, rcv_tot[j],rcv_len[j])
                     }
                     // for interface graph
                     var labels = label;
@@ -112,8 +115,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                            1. data_trs_rate : total rate for trs interface
                         */
                         for (var i = 0; i < _history_length_trs_rate; i++) {
-                            if (i % 100 === 0) {
-                                data_trs_rate.push(Math.round(_history_trs[i][1] * 0.001));
+                            if (i % 5 === 0) {
+                                data_trs_rate.push((_history_trs[i][1] * 0.001).toFixed(3));
                             }
                             // raw_data_trs_rate.push(_history_trs[i][1]);
                         }
@@ -128,8 +131,9 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                         for (var j = 0; j < duration; j++) {
                             for (var i = 0; i < _history_length_trs_rate; i++) {
                                 if (int_cmp_date[j].raw === moment(_history_trs[i][0]).format('MM-DD')) {
-                                    trs_tot[j] += _history_trs[i][1];
+                                    trs_tot[j] += _history_trs[i][1]*0.001;
                                     trs_len[j] += 1;
+                                    console.log(int_cmp_date[j].raw);
                                 }
                             }
                         }
@@ -138,6 +142,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                         */
                         for (var j = 0; j < duration; j++) {
                             int_trs_avg.push(trs_tot[j] / trs_len[j]);
+                            console.log("TRS");
+                            console.log(j, trs_tot[j],trs_len[j])
                         }
                         /* make all data for interface to use table
                            1. int_data : date, rcv, trs
@@ -145,8 +151,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                         for (var k = 0; k < int_date.length; k++) {
                             int_data.push({
                                 date: int_date[k],
-                                rcv_avg: Math.round(int_rcv_avg[k] * 0.001),
-                                trs_avg: Math.round(int_trs_avg[k] * 0.001)
+                                rcv_avg: int_rcv_avg[k].toFixed(3),
+                                trs_avg: int_trs_avg[k].toFixed(3)
                             });
                         }
                         // interface rate for graph
@@ -154,10 +160,15 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                             data_rcv_rate,
                             data_trs_rate
                         ];
+                        console.log(data_rcv_rate, data_trs_rate);
                         // get max for y-axis
                         var int_rcv_max = Math.max.apply(null, data_rcv_rate);
                         var int_trs_max = Math.max.apply(null, data_trs_rate);
                         var int_max = Math.max.apply(null, [int_rcv_max, int_trs_max]);
+
+                        console.log(int_max);
+
+                        var option_max = Math.round(int_max);
                         // set options for grp
                         var options = {
                             scales: {
@@ -173,7 +184,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                                         fontStyle: "bold"
                                     },
                                     ticks: {
-                                        max: Math.ceil(int_max * 0.001) * 1000,
+                                        // max: Math.ceil(int_max * 0.001) * 1000,
+                                        max: option_max,
                                         min: 0,
                                         beginAtZero: true,
                                         fontSize: 12,
@@ -192,7 +204,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                                             fontStyle: "bold"
                                         },
                                         ticks: {
-                                            max: Math.ceil(int_max * 0.001) * 1000,
+                                            // max: Math.ceil(int_max * 0.001) * 1000,
+                                            max: option_max,
                                             min: 0,
                                             beginAtZero: true,
                                             fontSize: 12,

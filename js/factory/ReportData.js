@@ -43,7 +43,7 @@ reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFr
             .addSection(config.users_tr.section)
             .addQstring(rest_qstring)
             .getUrls();
-
+        console.log(rest_url);
         return $http({
             method: 'GET',
             url: rest_url,

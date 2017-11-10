@@ -66,16 +66,16 @@ reportApp.service('ReportUserData', function($window, $q, ReportData, UserAppDat
                         _users_from.push(user_from.toLocaleString());
                         var user_until = new Date(_users[i]['until']);
                         _users_until.push(user_until.setHours(user_until.getHours() + 9));
-                        _users_total.push(Math.round(_users[i]['total_rate'] * 0.001));
-                        _users_download.push(Math.round(_users[i]['dest_smoothed_rate'] * 0.001));
-                        _users_upload.push(Math.round(_users[i]['source_smoothed_rate'] * 0.001));
+                        _users_total.push((_users[i]['total_rate'] * 0.001).toFixed(3));
+                        _users_download.push((_users[i]['dest_smoothed_rate'] * 0.001).toFixed(3));
+                        _users_upload.push((_users[i]['source_smoothed_rate'] * 0.001).toFixed(3));
                         _users_tb_data.push({
                             name: _users[i]['name'],
                             from: user_from.toLocaleString(),
                             until: user_until.toLocaleString(),
-                            total: Math.round(_users[i]['total_rate'] * 0.001),
-                            down: Math.round(_users[i]['dest_smoothed_rate'] * 0.001),
-                            up: Math.round(_users[i]['source_smoothed_rate'] * 0.001)
+                            total: (_users[i]['total_rate'] * 0.001).toFixed(3),
+                            down: (_users[i]['dest_smoothed_rate'] * 0.001).toFixed(3),
+                            up: (_users[i]['source_smoothed_rate'] * 0.001).toFixed(3)
                         });
                     }
                     // var _users_data = [_users_total, _users_download, _users_upload];
@@ -142,24 +142,24 @@ reportApp.service('ReportUserData', function($window, $q, ReportData, UserAppDat
                             _users_app.push({
                                 "user_name": data['data']['collection'][0].link.href.split('/')[6],
                                 "top1_app_name": data['data']['collection'][0]['name'],
-                                "top1_app_total": Math.round(data['data']['collection'][0]['total_rate'] * 0.001),
+                                "top1_app_total": (data['data']['collection'][0]['total_rate'] * 0.001).toFixed(3),
                                 "top1_app_from": top1_from.toLocaleString(),
                                 "top1_app_until": top1_until.toLocaleString(),
                                 "top2_app_name": data['data']['collection'][1]['name'],
-                                "top2_app_total": Math.round(data['data']['collection'][1]['total_rate'] * 0.001),
+                                "top2_app_total": (data['data']['collection'][1]['total_rate'] * 0.001).toFixed(3),
                                 "top2_app_from": top2_from.toLocaleString(),
                                 "top2_app_until": top2_until.toLocaleString(),
                                 "top3_app_name": data['data']['collection'][2]['name'],
-                                "top3_app_total": Math.round(data['data']['collection'][2]['total_rate'] * 0.001),
+                                "top3_app_total": (data['data']['collection'][2]['total_rate'] * 0.001).toFixed(3),
                                 "top3_app_from": top3_from.toLocaleString(),
                                 "top3_app_until": top3_until.toLocaleString()
                             });
                             _users_app.sort(function (a, b) { // DESC
                                 return b['top1_app_total'] - a['top1_app_total'];
                             });
-                            _users_app_top1.push(Math.round(data['data']['collection'][0]['total_rate'] * 0.001));
-                            _users_app_top2.push(Math.round(data['data']['collection'][1]['total_rate'] * 0.001));
-                            _users_app_top3.push(Math.round(data['data']['collection'][2]['total_rate'] * 0.001));
+                            _users_app_top1.push((data['data']['collection'][0]['total_rate'] * 0.001).toFixed(3));
+                            _users_app_top2.push((data['data']['collection'][1]['total_rate'] * 0.001).toFixed(3));
+                            _users_app_top3.push((data['data']['collection'][2]['total_rate'] * 0.001).toFixed(3));
                             _users_appName_top1.push(data['data']['collection'][0]['name']);
                             _users_appName_top2.push(data['data']['collection'][1]['name']);
                             _users_appName_top3.push(data['data']['collection'][2]['name']);

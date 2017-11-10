@@ -1,4 +1,4 @@
-/*! saisei_report - v1.0.0 - 2017-10-27 */ 
+/*! saisei_report - v1.0.0 - 2017-11-10 */ 
 'use strict';
 
 var reportApp = angular.module('reportApp', [
@@ -702,10 +702,11 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                     */
 
                     for (var i = 0; i < _history_length_rcv_rate; i++) {
-                        if (i % 100 === 0) {
+                        if (i % 5 === 0) {
                             var t = new Date(_history_rcv[i][0]);
                             label.push(t.toLocaleString());
-                            data_rcv_rate.push(Math.round(_history_rcv[i][1] * 0.001));
+                            data_rcv_rate.push((_history_rcv[i][1] * 0.001).toFixed(3));
+                            // data_rcv_rate.push(Math.round(_history_rcv[i][1] * 0.001));
                         }
                         // raw_label.push(_history_rcv[i][0]);
                         // raw_data_rcv_rate.push(_history_rcv[i][1]);
@@ -721,7 +722,7 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                     for (var j = 0; j < duration; j++) {
                         for (var i = 0; i < _history_length_rcv_rate; i++) {
                             if (int_cmp_date[j].raw === moment(_history_rcv[i][0]).format('MM-DD')) {
-                                rcv_tot[j] += _history_rcv[i][1];
+                                rcv_tot[j] += _history_rcv[i][1]*0.001;
                                 rcv_len[j] += 1;
                             }
                         }
@@ -731,6 +732,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                     */
                     for (var j = 0; j < duration; j++) {
                         int_rcv_avg.push(rcv_tot[j] / rcv_len[j]);
+                        console.log("RCV");
+                        console.log(j, rcv_tot[j],rcv_len[j])
                     }
                     // for interface graph
                     var labels = label;
@@ -751,8 +754,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                            1. data_trs_rate : total rate for trs interface
                         */
                         for (var i = 0; i < _history_length_trs_rate; i++) {
-                            if (i % 100 === 0) {
-                                data_trs_rate.push(Math.round(_history_trs[i][1] * 0.001));
+                            if (i % 5 === 0) {
+                                data_trs_rate.push((_history_trs[i][1] * 0.001).toFixed(3));
                             }
                             // raw_data_trs_rate.push(_history_trs[i][1]);
                         }
@@ -767,8 +770,9 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                         for (var j = 0; j < duration; j++) {
                             for (var i = 0; i < _history_length_trs_rate; i++) {
                                 if (int_cmp_date[j].raw === moment(_history_trs[i][0]).format('MM-DD')) {
-                                    trs_tot[j] += _history_trs[i][1];
+                                    trs_tot[j] += _history_trs[i][1]*0.001;
                                     trs_len[j] += 1;
+                                    console.log(int_cmp_date[j].raw);
                                 }
                             }
                         }
@@ -777,6 +781,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                         */
                         for (var j = 0; j < duration; j++) {
                             int_trs_avg.push(trs_tot[j] / trs_len[j]);
+                            console.log("TRS");
+                            console.log(j, trs_tot[j],trs_len[j])
                         }
                         /* make all data for interface to use table
                            1. int_data : date, rcv, trs
@@ -784,8 +790,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                         for (var k = 0; k < int_date.length; k++) {
                             int_data.push({
                                 date: int_date[k],
-                                rcv_avg: Math.round(int_rcv_avg[k] * 0.001),
-                                trs_avg: Math.round(int_trs_avg[k] * 0.001)
+                                rcv_avg: int_rcv_avg[k].toFixed(3),
+                                trs_avg: int_trs_avg[k].toFixed(3)
                             });
                         }
                         // interface rate for graph
@@ -793,10 +799,15 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                             data_rcv_rate,
                             data_trs_rate
                         ];
+                        console.log(data_rcv_rate, data_trs_rate);
                         // get max for y-axis
                         var int_rcv_max = Math.max.apply(null, data_rcv_rate);
                         var int_trs_max = Math.max.apply(null, data_trs_rate);
                         var int_max = Math.max.apply(null, [int_rcv_max, int_trs_max]);
+
+                        console.log(int_max);
+
+                        var option_max = Math.round(int_max);
                         // set options for grp
                         var options = {
                             scales: {
@@ -812,7 +823,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                                         fontStyle: "bold"
                                     },
                                     ticks: {
-                                        max: Math.ceil(int_max * 0.001) * 1000,
+                                        // max: Math.ceil(int_max * 0.001) * 1000,
+                                        max: option_max,
                                         min: 0,
                                         beginAtZero: true,
                                         fontSize: 12,
@@ -831,7 +843,8 @@ reportApp.service('ReportInterfaceTotalRate', function($window, $q, ReportData) 
                                             fontStyle: "bold"
                                         },
                                         ticks: {
-                                            max: Math.ceil(int_max * 0.001) * 1000,
+                                            // max: Math.ceil(int_max * 0.001) * 1000,
+                                            max: option_max,
                                             min: 0,
                                             beginAtZero: true,
                                             fontSize: 12,
@@ -1016,16 +1029,16 @@ reportApp.service('ReportUserData', function($window, $q, ReportData, UserAppDat
                         _users_from.push(user_from.toLocaleString());
                         var user_until = new Date(_users[i]['until']);
                         _users_until.push(user_until.setHours(user_until.getHours() + 9));
-                        _users_total.push(Math.round(_users[i]['total_rate'] * 0.001));
-                        _users_download.push(Math.round(_users[i]['dest_smoothed_rate'] * 0.001));
-                        _users_upload.push(Math.round(_users[i]['source_smoothed_rate'] * 0.001));
+                        _users_total.push((_users[i]['total_rate'] * 0.001).toFixed(3));
+                        _users_download.push((_users[i]['dest_smoothed_rate'] * 0.001).toFixed(3));
+                        _users_upload.push((_users[i]['source_smoothed_rate'] * 0.001).toFixed(3));
                         _users_tb_data.push({
                             name: _users[i]['name'],
                             from: user_from.toLocaleString(),
                             until: user_until.toLocaleString(),
-                            total: Math.round(_users[i]['total_rate'] * 0.001),
-                            down: Math.round(_users[i]['dest_smoothed_rate'] * 0.001),
-                            up: Math.round(_users[i]['source_smoothed_rate'] * 0.001)
+                            total: (_users[i]['total_rate'] * 0.001).toFixed(3),
+                            down: (_users[i]['dest_smoothed_rate'] * 0.001).toFixed(3),
+                            up: (_users[i]['source_smoothed_rate'] * 0.001).toFixed(3)
                         });
                     }
                     // var _users_data = [_users_total, _users_download, _users_upload];
@@ -1092,24 +1105,24 @@ reportApp.service('ReportUserData', function($window, $q, ReportData, UserAppDat
                             _users_app.push({
                                 "user_name": data['data']['collection'][0].link.href.split('/')[6],
                                 "top1_app_name": data['data']['collection'][0]['name'],
-                                "top1_app_total": Math.round(data['data']['collection'][0]['total_rate'] * 0.001),
+                                "top1_app_total": (data['data']['collection'][0]['total_rate'] * 0.001).toFixed(3),
                                 "top1_app_from": top1_from.toLocaleString(),
                                 "top1_app_until": top1_until.toLocaleString(),
                                 "top2_app_name": data['data']['collection'][1]['name'],
-                                "top2_app_total": Math.round(data['data']['collection'][1]['total_rate'] * 0.001),
+                                "top2_app_total": (data['data']['collection'][1]['total_rate'] * 0.001).toFixed(3),
                                 "top2_app_from": top2_from.toLocaleString(),
                                 "top2_app_until": top2_until.toLocaleString(),
                                 "top3_app_name": data['data']['collection'][2]['name'],
-                                "top3_app_total": Math.round(data['data']['collection'][2]['total_rate'] * 0.001),
+                                "top3_app_total": (data['data']['collection'][2]['total_rate'] * 0.001).toFixed(3),
                                 "top3_app_from": top3_from.toLocaleString(),
                                 "top3_app_until": top3_until.toLocaleString()
                             });
                             _users_app.sort(function (a, b) { // DESC
                                 return b['top1_app_total'] - a['top1_app_total'];
                             });
-                            _users_app_top1.push(Math.round(data['data']['collection'][0]['total_rate'] * 0.001));
-                            _users_app_top2.push(Math.round(data['data']['collection'][1]['total_rate'] * 0.001));
-                            _users_app_top3.push(Math.round(data['data']['collection'][2]['total_rate'] * 0.001));
+                            _users_app_top1.push((data['data']['collection'][0]['total_rate'] * 0.001).toFixed(3));
+                            _users_app_top2.push((data['data']['collection'][1]['total_rate'] * 0.001).toFixed(3));
+                            _users_app_top3.push((data['data']['collection'][2]['total_rate'] * 0.001).toFixed(3));
                             _users_appName_top1.push(data['data']['collection'][0]['name']);
                             _users_appName_top2.push(data['data']['collection'][1]['name']);
                             _users_appName_top3.push(data['data']['collection'][2]['name']);
@@ -1271,7 +1284,7 @@ reportApp.factory('ReportData', function($http, $log, $base64, $window, ReportFr
             .addSection(config.users_tr.section)
             .addQstring(rest_qstring)
             .getUrls();
-
+        console.log(rest_url);
         return $http({
             method: 'GET',
             url: rest_url,
